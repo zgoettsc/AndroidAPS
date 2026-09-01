@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diabetes Rig Field Manual</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font:15px/1.55 -apple-system,system-ui,Roboto,sans-serif;color:#1a1a1a;background:#f6f7f9;padding:14px}
+.wrap{max-width:880px;margin:0 auto} h1{font-size:22px;margin:0 0 2px}
+.meta{color:#555;font-size:12px;margin-bottom:8px}
+h2{font-size:17px;border-bottom:2px solid #cfd4dc;padding-bottom:5px;scroll-margin-top:8px}
+h3{font-size:15px;margin:16px 0 4px;color:#243}
+.warn{background:#fff4e5;border:1px solid #f0b37e;border-radius:8px;padding:9px 12px;font-size:13px;margin:10px 0}
+.crit{background:#fdecea;border:1px solid #e8998f;border-radius:8px;padding:9px 12px;font-size:13px;margin:10px 0}
+.tip{background:#e8f4ea;border:1px solid #9ccaa6;border-radius:8px;padding:9px 12px;font-size:13px;margin:8px 0}
+#q{width:100%;padding:11px 12px;font-size:15px;border:1px solid #c4cad3;border-radius:8px;margin:8px 0}
+#toc{background:#fff;border-radius:8px;padding:8px 14px;font-size:14px;columns:2;column-gap:22px}
+@media(max-width:560px){#toc{columns:1}} #toc a{display:block;padding:2px 0;text-decoration:none;color:#1257a8}
+section{background:#fff;border-radius:8px;padding:2px 16px 12px;margin:12px 0}
+code{background:#eceef1;padding:1px 5px;border-radius:4px;font-size:13px}
+ul,ol{margin:6px 0 6px 2px;padding-left:20px} li{margin:3px 0}
+.sym{font-weight:700;color:#8a2c1c} .fix{margin:2px 0 10px}
+table{border-collapse:collapse;width:100%;font-size:13px} td,th{border:1px solid #dde1e6;padding:4px 8px;text-align:left}
+.hidden{display:none}
+@media print{body{background:#fff}#q,#toc{display:none}}
+</style></head><body><div class="wrap">
+
+<h1>Diabetes Rig — Field Manual</h1>
+<div class="meta">Operational + off-grid troubleshooting for the eternal AAPS loop + CGM stack · Rev 2026-09-01</div>
+<div class="warn"><b>Reference only — not medical or dosing advice; never overrides clinical judgment.</b> This is the "how to run it and fix it with no internet" layer. For exhaustive detail see the verbatim official archives (AAPS / xDrip / Juggluco) in the kit. Written for: eternal AAPS 3.4.2.6, Omnipod DASH (primary), Dexcom G7, xDrip+ (primary CGM) / Juggluco (backup), on Samsung phones.</div>
+
+<input id="q" type="search" placeholder="Search (e.g. no readings, pod won't activate, bluetooth, reinstall, brick)…" oninput="F(this.value)">
+
+<div id="toc">
+<a href="#map">1. System map &amp; data flow</a>
+<a href="#eternal">2. Your eternal build</a>
+<a href="#apps">3. What each app does</a>
+<a href="#connect">4. Connect &amp; integrate</a>
+<a href="#spare">5. Move to a spare phone</a>
+<a href="#newpod">6. Start a new pod / sensor</a>
+<a href="#tb-loop">7. TB: loop not dosing</a>
+<a href="#tb-cgm">8. TB: no/bad glucose</a>
+<a href="#tb-bt">9. TB: Bluetooth</a>
+<a href="#tb-pod">10. TB: pump / DASH</a>
+<a href="#tb-profile">11. TB: profile / settings</a>
+<a href="#tb-phone">12. TB: phone / Android</a>
+<a href="#tb-install">13. TB: reinstall off-grid</a>
+<a href="#escalate">14. Total-failure escalation</a>
+<a href="#kit">15. Kit inventory</a>
+<a href="#storage">16. Cold storage</a>
+<a href="#glossary">17. Glossary</a>
+</div>
+
+<section id="map"><h2>1. System map &amp; data flow</h2>
+<p style="text-align:center"><b>Dexcom G7</b> →(Bluetooth)→ <b>CGM app</b> (xDrip+ or Juggluco) →(local broadcast)→ <b>AAPS</b> →(Bluetooth)→ <b>Omnipod DASH pod</b></p>
+<ul>
+<li>All local Bluetooth. <b>No internet is needed to loop.</b> Cell/wifi are not part of dosing.</li>
+<li>Sensor → CGM app → AAPS every ~5 min → pump. Break any link and the loop pauses (the pod keeps running default basal — see §10).</li>
+</ul>
+</section>
+
+<section id="eternal"><h2>2. Your eternal build — what's different</h2>
+<p>Self-signed AAPS 3.4.2.6 (code tag <code>6c7c</code>) with three stock kill-switches removed:</p>
+<ul>
+<li><b>No version expiry</b> — never forces open-loop with age.</li>
+<li><b>Objectives neutralized</b> — closed loop/SMB always available.</li>
+<li><b>Clock-reset safe</b> — a wrong clock can't wipe progress or disable the loop.</li>
+</ul>
+<div class="tip"><b>Updating later:</b> rebuild from the same branch and sign with the same <code>aaps-eternal.jks</code>. Same key = installs over the top, no wipe. Different key = uninstall required (data loss). The keystore + passwords are the one irreplaceable thing — keep them backed up (password manager + offline).</div>
+</section>
+
+<section id="apps"><h2>3. What each app does</h2>
+<ul>
+<li><b>AAPS</b> — the brain. Reads glucose, predicts, adjusts basal + gives small corrections (SMB), commands the pump.</li>
+<li><b>xDrip+</b> — primary CGM reader. Native G7; can start a sensor offline with no Dexcom account. Broadcasts glucose to AAPS.</li>
+<li><b>Juggluco</b> — backup CGM reader (independent). Same broadcast channel to AAPS. Idle unless xDrip+ fails.</li>
+</ul>
+</section>
+
+<section id="connect"><h2>4. Connect &amp; integrate</h2>
+<h3>AAPS core</h3>
+<ol>
+<li>☰ → select the <b>AAPS directory</b> (Internal storage/AAPS) if prompted.</li>
+<li>Maintenance → <b>Import settings</b> (file in AAPS/preferences) → master password.</li>
+<li>Activate profile: <b>ACT → Profile switch → 100% → OK</b> (needs a live pod to fully take — see §10/§11).</li>
+<li>Config Builder → <b>BG Source → xDrip+</b>; <b>Pump → Omnipod DASH</b>.</li>
+<li>Loop plugin → enable <b>Closed loop</b>.</li>
+</ol>
+<h3>xDrip+</h3>
+<ol>
+<li>Settings → Hardware Data Source → <b>Dexcom G7/ONE+</b>.</li>
+<li>Settings → Inter-app settings → <b>Broadcast locally: ON</b> (Accept Glucose: OFF).</li>
+<li>App battery → <b>Unrestricted</b>.</li>
+</ol>
+<h3>Juggluco (backup — leave idle)</h3>
+<ol>
+<li>☰ → Settings → enable <b>xDrip broadcast</b> (NOT Patched Libre); receiver <code>info.nightscout.androidaps</code>; save.</li>
+<li>☰ → Photo → scan the G7 applicator data-matrix (only when switching to it).</li>
+</ol>
+<div class="crit"><b>One CGM reader at a time.</b> xDrip+ and Juggluco share the same broadcast into AAPS. Running both = erratic BG, and the G7 only feeds one app. Keep Juggluco's broadcast OFF unless you're switching to it.</div>
+</section>
+
+<section id="spare"><h2>5. Move the loop to a spare phone</h2>
+<ol>
+<li>Spare already has eternal AAPS + your settings. Confirm profile values.</li>
+<li>Set BG Source = xDrip+ / Pump = DASH.</li>
+<li><b>Activate a NEW pod on the spare</b> — a running pod is bound to the phone that activated it and cannot transfer. (Keep the PDM as the ultimate backup — see §14.)</li>
+<li>Pair the G7 to the spare's xDrip+ (the sensor can only feed one phone; stop the old phone reading it).</li>
+<li>Activate profile, close loop.</li>
+</ol>
+</section>
+
+<section id="newpod"><h2>6. Start a new pod / new sensor</h2>
+<h3>New DASH pod</h3>
+<ul>
+<li>DASH tab → <b>POD MGMT → Activate Pod</b>. Fill with <b>≥80 U</b> (priming uses ~3–10 U). Two beeps = ready to prime.</li>
+<li>If <i>"Could not find an available pod for activation"</i> appears — don't panic, tap <b>Retry</b>; it usually continues.</li>
+<li>Pod life = 72 h + 8 h grace = <b>80 h</b>. Deactivation is final — a pod can't be reused.</li>
+<li><b>Export settings right after every activation</b> (the pod's active state lives in the settings file — a later restore of an older export would drop the new pod).</li>
+</ul>
+<h3>New G7 sensor</h3>
+<ul>
+<li><b>xDrip+ (offline-capable):</b> G7 mode selected → insert sensor → it pairs and warms up (~30 min). No account/internet needed.</li>
+<li><b>Juggluco:</b> ☰ → Photo → scan the applicator data-matrix; agree to pair within 5 min (keep screen on).</li>
+<li>Store <b>old</b> sensors ≥15 m away so BT doesn't grab the wrong one.</li>
+</ul>
+</section>
+
+<section id="tb-loop"><h2>7. Troubleshooting — loop not dosing</h2>
+<p class="sym">Red "NO PROFILE SET"</p>
+<div class="fix">Activate a profile (ACT → Profile switch → 100% → OK). If it won't clear and shows <i>"Failed to update basal profile / connection timed out"</i> — AAPS is trying to push basal to a pump that isn't connected. Normal with no pod; it clears once a live pod is paired.</div>
+<p class="sym">Loop greyed out / not closing</p>
+<div class="fix">Check in order: profile active? pump connected? BG flowing (not stale >~12 min)? Loop plugin set to Closed? (Objectives are NOT a blocker on the eternal build.) A stale/missing BG stops dosing until readings resume — fix the CGM (§8).</div>
+<p class="sym">Loop runs but gives little/no insulin</p>
+<div class="fix">Usually a constraint doing its job: max IOB / max basal / max bolus reached, or a low temp-target/override active. Check the loop reason on the home screen. This is safety, not a fault.</div>
+</section>
+
+<section id="tb-cgm"><h2>8. Troubleshooting — no / bad glucose</h2>
+<p class="sym">No readings after starting a sensor</p>
+<div class="fix">Wait out warmup (~30 min). Bluetooth on? Sensor still paired to another app/phone? (one-reader rule). First Juggluco reading can take 2–10 min.</div>
+<p class="sym">Readings in the CGM app but not in AAPS</p>
+<div class="fix">xDrip+ "Broadcast locally" is OFF, or AAPS BG source is wrong. Turn broadcast ON and set AAPS BG Source = xDrip+. (For Juggluco: xDrip broadcast ON, receiver <code>info.nightscout.androidaps</code>.)</div>
+<p class="sym">Erratic / jumping BG</p>
+<div class="fix">Both xDrip+ and Juggluco are broadcasting. Turn one off — one reader at a time.</div>
+<p class="sym">Signal loss / gaps</p>
+<div class="fix">Keep phone within range; body between sensor and phone blocks BLE. Restart Bluetooth (§9). G7 disconnects briefly after each reading — normal.</div>
+<p class="sym">Switch to the backup reader (Juggluco)</p>
+<div class="fix">Turn xDrip+ broadcast OFF and stop it holding the sensor → enable Juggluco (xDrip broadcast + <code>info.nightscout.androidaps</code>) → ☰ → Photo → scan the applicator. AAPS BG source stays xDrip+.</div>
+</section>
+
+<section id="tb-bt"><h2>9. Troubleshooting — Bluetooth (most off-grid failures)</h2>
+<div class="crit"><b>#1 cause of "pod won't activate" / random pod failures: another app holding the "Nearby devices" permission.</b> Community-confirmed culprits include <b>BM2 solar-battery monitor</b> (very likely in an off-grid/solar kit!), myBMW/MINI, Amazon Alexa, Android Auto. Fix: Android Settings → Security &amp; privacy → Privacy controls → Permission manager → <b>Nearby devices</b> → set every app <b>except AAPS</b> to "Don't allow." Re-check after installing any new app on a loop phone.</div>
+<p class="sym">status=133 / "Bluetooth device not found" / pod or sensor won't connect</p>
+<div class="fix">Restart Bluetooth (toggle off/on); if no luck, reboot the phone; disconnect interfering BT devices (earbuds, watch, car); rescan the sensor / retry the pod. In Android Settings → Connected devices, "Forget" a stuck device, then re-pair.</div>
+<p class="sym">Battery optimization killing the connection</p>
+<div class="fix">Set <b>Unrestricted</b> battery for AAPS, xDrip+/Juggluco, AND the system <b>Bluetooth</b> app (Settings → Apps → show system apps → Bluetooth → Battery → Unrestricted/Not optimized).</div>
+<p class="sym">Frequent BT drops on Android 15</p>
+<div class="fix">Enable AAPS → Preferences → (Advanced) → <b>Bond BT device on Android 15+</b>, accept the pairing request, reboot. <b>Do NOT enable bonding on Android 16.</b></div>
+</section>
+
+<section id="tb-pod"><h2>10. Troubleshooting — pump / DASH</h2>
+<div class="tip"><b>Reassurance:</b> the pod <b>keeps delivering</b> when disconnected. It runs your profile's default basal; AAPS's temp adjustments last max 120 min, then it falls back to default basal automatically. A lost connection is not immediate danger.</div>
+<p class="sym">"Connecting…" forever</p>
+<div class="fix">No active pod (expected on a pod-less test phone), or pod out of range (5–10 m) / dead. Move closer; check §9 Bluetooth; on a real pod, Refresh from the DASH tab.</div>
+<p class="sym">Pod beeping / about to expire</p>
+<div class="fix">DASH tab → <b>Refresh</b> to silence alerts. Pod life 80 h total. Plan a change before expiry.</div>
+<p class="sym">Delivery suspended after a profile change and won't restart</p>
+<div class="fix">DASH suspends delivery before setting a new basal profile; a comms error can leave it suspended. Resume via the DASH tab (Refresh / resume). Watch for it after every profile switch on a live pod.</div>
+<p class="sym">Basal looks rounded / can't set tiny rates</p>
+<div class="fix">DASH only does 0.05 U/h steps and has no zero-basal (AAPS uses "Disconnect pump" for true zero). No 30-minute basal boundaries. Not a fault.</div>
+<p class="sym">Pod failed — start over</p>
+<div class="fix">POD MGMT → Deactivate (final) → Activate a new pod (§6). Keep ≥80 U per fill. Export settings after activating.</div>
+</section>
+
+<section id="tb-profile"><h2>11. Troubleshooting — profile / settings</h2>
+<p class="sym">"Import settings" shows no files</p>
+<div class="fix">The export must be in <code>Internal storage/AAPS/preferences/</code>, and AAPS must have that folder selected as its directory (☰ → select AAPS directory).</div>
+<p class="sym">"Basal not aligned to hours" / profile won't save</p>
+<div class="fix">DASH doesn't allow 30-minute basal boundaries — set basal segments on the hour.</div>
+<p class="sym">"Data from different pump"</p>
+<div class="fix">The imported settings carry another pod's activation. Deactivate/activate a pod fresh, or restore the correct export. Always export after each activation.</div>
+<p class="sym">Values look wrong after import</p>
+<div class="fix">The imported profile may be an older snapshot. Verify every basal/ISF/carb-ratio/target/DIA against your current settings card before trusting it. Tune in Local Profile, then re-activate.</div>
+</section>
+
+<section id="tb-phone"><h2>12. Troubleshooting — phone / Android</h2>
+<p class="sym">Apps keep getting killed / stop updating in background (Samsung)</p>
+<div class="fix">Battery → Unrestricted for AAPS, xDrip+/Juggluco, Bluetooth; turn Adaptive battery off. This is the most common Samsung failure.</div>
+<p class="sym">"Nearby devices" permission prompts / pod issues after adding an app</p>
+<div class="fix">Revoke Nearby devices for the new app (§9). On a loop phone, keep that permission to AAPS only.</div>
+<p class="sym">Play Protect warns the app is "unsafe"</p>
+<div class="fix">Normal for a self-built app. More details → Install anyway.</div>
+<p class="sym">Clock/date wrong after storage</p>
+<div class="fix">The eternal build tolerates it (loop still runs), but set the clock correctly for accurate history and pod timing. Pods/sensors care about time even when the loop doesn't.</div>
+<p class="sym">Storage full</p>
+<div class="fix">Clear space (old logs/exports); AAPS needs room to write its DB and exports.</div>
+</section>
+
+<section id="tb-install"><h2>13. Troubleshooting — reinstall with NO internet</h2>
+<div class="tip">This is why every APK is archived on the phone + the kit USB. Off-grid you cannot re-download — install from the local copies.</div>
+<p class="sym">Reinstall any app (AAPS / xDrip+ / Juggluco)</p>
+<div class="fix">Open the archived APK from storage → allow "install unknown apps" → Install. For AAPS, use the copy signed with YOUR keystore.</div>
+<p class="sym">"App not installed" when reinstalling/updating AAPS</p>
+<div class="fix">Signature mismatch — the existing app was signed with a different key. Uninstall it first (wipes its data — you have the settings export), then install your signed APK. Always use the same keystore to avoid this.</div>
+<p class="sym">Restore settings after a reinstall</p>
+<div class="fix">Open AAPS → select AAPS directory → Maintenance → Import settings → newest export in AAPS/preferences → master password. Verify profile values.</div>
+</section>
+
+<section id="escalate"><h2>14. Total-failure escalation (decision tree)</h2>
+<ol>
+<li><b>Fix in place</b> — work the relevant section above (Bluetooth, CGM, pod).</li>
+<li><b>Swap CGM reader</b> — xDrip+ ⇄ Juggluco (§8).</li>
+<li><b>Swap phone</b> — move to a spare (§5); activate a new pod there.</li>
+<li><b>Fall back to the Omnipod PDM</b> — the standalone controller you kept. Use it to run the pod manually if AAPS/phones are all down.</li>
+<li><b>MDI (Layer 0)</b> — pens + your printed settings card (basal→long-acting, ISF/carb-ratio for corrections/meals). The floor that always works.</li>
+</ol>
+<div class="crit"><b>Never throw away the PDM</b> — it's the pump's own backup controller for when every phone/app is dead.</div>
+</section>
+
+<section id="kit"><h2>15. Kit inventory — where everything lives</h2>
+<table>
+<tr><th>Item</th><th>Purpose</th></tr>
+<tr><td>Signed AAPS APK + xDrip+ APK + Juggluco APK</td><td>Reinstall off-grid (on each phone + USB)</td></tr>
+<tr><td><code>aaps-eternal.jks</code> + passwords</td><td>Sign future updates (offline + password manager) — NEVER lose</td></tr>
+<tr><td>Newest AAPS settings export</td><td>Restore profile/config; re-export after each pod activation</td></tr>
+<tr><td>Printed settings card (basal/ISF/CR/target/DIA)</td><td>Tuning reference + MDI dosing</td></tr>
+<tr><td>This Field Manual + official doc archives (printed + on-device)</td><td>Fix things with no internet</td></tr>
+<tr><td>Omnipod PDM</td><td>Pump backup controller</td></tr>
+<tr><td>Spare pods, G7 sensors, pens (long-acting + rapid), test strips</td><td>Consumables + MDI floor</td></tr>
+<tr><td>Charged power bank + cables; Faraday bag</td><td>Keep spares alive / shielded</td></tr>
+</table>
+</section>
+
+<section id="storage"><h2>16. Cold storage &amp; maintenance</h2>
+<ul>
+<li>Store bagged spares at ~50% charge; top up every ~3 months (reminder).</li>
+<li>On retrieval: set the clock; confirm profile; the eternal build won't have expired.</li>
+<li>Re-export settings + reprint the settings card whenever therapy changes; refresh the bagged phones.</li>
+<li>Verify the keystore backup still exists.</li>
+</ul>
+</section>
+
+<section id="glossary"><h2>17. Glossary</h2>
+<ul>
+<li><b>AAPS</b> looping app · <b>CGM</b> glucose monitor (G7 + reader app) · <b>PDM</b> Omnipod's own controller</li>
+<li><b>Basal</b> background insulin · <b>Bolus</b> meal/correction dose · <b>SMB</b> small auto correction</li>
+<li><b>IOB/COB</b> insulin/carbs still active · <b>ISF</b> drop per unit · <b>ICR/carb ratio</b> g per unit · <b>DIA</b> insulin duration</li>
+<li><b>Closed/Open loop</b> auto vs suggest-only · <b>LGS</b> low-glucose suspend</li>
+<li><b>Broadcast</b> how the CGM app hands glucose to AAPS · <b>Sideload</b> install an APK directly · <b>Nearby devices</b> Android BLE permission (keep to AAPS only on loop phones)</li>
+</ul>
+</section>
+
+</div><script>
+function F(q){q=(q||'').trim().toLowerCase();var s=document.querySelectorAll('section');var t=document.getElementById('toc');
+if(!q){s.forEach(function(e){e.classList.remove('hidden')});t.classList.remove('hidden');return}
+t.classList.add('hidden');
+s.forEach(function(e){e.classList.toggle('hidden', e.textContent.toLowerCase().indexOf(q)===-1)});}
+</script></body></html>
