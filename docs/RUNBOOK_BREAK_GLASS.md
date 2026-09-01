@@ -2,6 +2,23 @@
 
 Print this. Steps are written to be followed under stress, offline.
 
+## 0. One-time xDrip+ install & config (do on every phone)
+
+Install xDrip+ (official APK from github.com/NightscoutFoundation/xDrip → Releases; archive a copy
+in the kit — self-signed, never expires). Then on EACH phone:
+
+1. Open xDrip+; skip the first-run wizard (answer **No** to the offers).
+2. Settings → **Hardware Data Source → Dexcom G7 / ONE / ONE+**.
+3. Settings → **Inter-app settings → Broadcast locally: ON** (Accept Glucose: OFF).
+4. Phone Settings → Apps → xDrip+ → Battery → **Unrestricted**; add to **Never sleeping apps**.
+5. In AAPS on that phone → Config Builder → **BG Source → xDrip+** (leave BYODA primary if used).
+
+Steps 1–5 are inert plumbing — they do not touch the sensor, so they are safe on all phones.
+**Pair the live G7 (Start sensor) on only ONE phone at a time** — the G7 will not feed multiple
+phones at once, and pairing a spare can interrupt the phone/app currently reading the sensor.
+The end-to-end reading test (BG shows in xDrip+, then in AAPS within ~5 min) can only be done on
+the phone that actually holds the sensor.
+
 ## A. BYODA fails → switch CGM to xDrip+
 
 Why xDrip+ exists in this kit: xDrip+ can pair and **start a fresh Dexcom G7 session with no
