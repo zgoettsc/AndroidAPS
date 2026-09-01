@@ -10,18 +10,17 @@ resilience kit — see `../SHTF_LOOP_RESILIENCE_PLAN.md`.
 |---|---|---|
 | `AAPS_Official_Docs_Archive.html` | All 121 English AAPS doc pages — incl. Omnipod DASH/Eros/Medtronic, Dexcom G7, xDrip, Juggluco, and the Bluetooth / General / Profile-Tuning troubleshooting | `openaps/AndroidAPSdocs` (readthedocs), **AGPL-3.0** — verbatim redistribution permitted |
 | `xDrip_Official_Docs_Archive.html` | 25 pages — README, Quick Start, Incoming Glucose Broadcast, Watch Guide, wiki, technical docs | `NightscoutFoundation/xDrip` README + Documentation + wiki, **GPL/AGPL** |
+| `Juggluco_Complete_Guide.html` | Every juggluco.nl help page + Juggluco README/wiki, AAPS-integration section first | Compiled from juggluco.nl + Juggluco GitHub (© Jaap Korthals Altes); included with attribution for personal reference |
 
-Both are text-only (screenshots omitted to keep each a small single file); the images remain in
-the upstream sources. Redirect/script tags have been stripped so the files never navigate away.
+The AAPS/xDrip archives are text-only (screenshots omitted to keep each a small single file); the
+images remain in the upstream sources. Redirect/script tags have been stripped so the files never
+navigate away.
 
-## Delivered separately (NOT in this public repo, by design)
+## Related docs elsewhere in this repo
 
-- **Juggluco Complete Guide** — compiled from the author's website (juggluco.nl) help pages, whose
-  text is not clearly licensed for public redistribution. Kept as a local file in the kit, not
-  committed here.
-- **Trio Settings Reference** — personal insulin dosing values; kept off the public repo.
-- **Field Manual** — operational + off-grid troubleshooting (this repo's own content); see
-  `../FIELD_MANUAL.html` once built.
+- `../FIELD_MANUAL.html` — operational + off-grid troubleshooting (this repo's own content).
+- `../SETTINGS_REFERENCE.html` — the owner's current therapy settings (name-free), for offline
+  viewing and tuning. Reference only; not dosing advice.
 
 ## Rebuilding / updating
 
