@@ -19,11 +19,26 @@ phones at once, and pairing a spare can interrupt the phone/app currently readin
 The end-to-end reading test (BG shows in xDrip+, then in AAPS within ~5 min) can only be done on
 the phone that actually holds the sensor.
 
-## A. BYODA fails → switch CGM to xDrip+
+## BYODA status — PARKED (2026-09-01)
 
-Why xDrip+ exists in this kit: xDrip+ can pair and **start a fresh Dexcom G7 session with no
-Dexcom account and no internet**. BYODA is the primary collector; xDrip+ is the break-glass
-backup and stays idle otherwise.
+BYODA is **not deployed**. xDrip+ is the actual CGM on all three phones. Decision reached after
+the DiaKEM G7 APK patcher proved heavily bit-rotted:
+- Dockerfile base image `openjdk:11.0-jre-buster` was deleted from Docker Hub (fixed locally by
+  switching to `eclipse-temurin:11-jre`).
+- Its auto-download of the stock APK from APKPure now returns **403 Forbidden**.
+- A manually-downloaded G7 APK turned out to be a **split/bundle** (no single AndroidManifest.xml;
+  apktool `versionInfo: null`), and the patches only apply to the exact standalone build
+  **1.6.1.4537**.
+No old patched BYODA APK exists on the Mac or any phone. To revisit later would require a genuine
+standalone `1.6.1.4537` APK (or merging the splits with APKEditor) and hoping the rotted patch set
+still applies — low value vs. xDrip+, which already works. **xDrip+ is primary; this is fine and
+arguably better for offline use.**
+
+## A. Switch/confirm CGM = xDrip+
+
+Why xDrip+ is the CGM here: it can pair and **start a fresh Dexcom G7 session with no Dexcom
+account and no internet** — the best property for a grid-down device. (If BYODA is ever built, it
+would become the accuracy-preferred primary and xDrip+ the backup; until then xDrip+ is primary.)
 
 1. Open **xDrip+** → Settings → Hardware Data Source → **G7 / ONE+**.
 2. Settings → Inter-app settings → **Broadcast Data: ON**, Accept Glucose: OFF.
