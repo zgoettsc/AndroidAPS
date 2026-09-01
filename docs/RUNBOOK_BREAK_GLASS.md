@@ -2,11 +2,43 @@
 
 Print this. Steps are written to be followed under stress, offline.
 
-## A. BYODA fails → switch CGM to xDrip+
+## 0. One-time xDrip+ install & config (do on every phone)
 
-Why xDrip+ exists in this kit: xDrip+ can pair and **start a fresh Dexcom G7 session with no
-Dexcom account and no internet**. BYODA is the primary collector; xDrip+ is the break-glass
-backup and stays idle otherwise.
+Install xDrip+ (official APK from github.com/NightscoutFoundation/xDrip → Releases; archive a copy
+in the kit — self-signed, never expires). Then on EACH phone:
+
+1. Open xDrip+; skip the first-run wizard (answer **No** to the offers).
+2. Settings → **Hardware Data Source → Dexcom G7 / ONE / ONE+**.
+3. Settings → **Inter-app settings → Broadcast locally: ON** (Accept Glucose: OFF).
+4. Phone Settings → Apps → xDrip+ → Battery → **Unrestricted**; add to **Never sleeping apps**.
+5. In AAPS on that phone → Config Builder → **BG Source → xDrip+** (leave BYODA primary if used).
+
+Steps 1–5 are inert plumbing — they do not touch the sensor, so they are safe on all phones.
+**Pair the live G7 (Start sensor) on only ONE phone at a time** — the G7 will not feed multiple
+phones at once, and pairing a spare can interrupt the phone/app currently reading the sensor.
+The end-to-end reading test (BG shows in xDrip+, then in AAPS within ~5 min) can only be done on
+the phone that actually holds the sensor.
+
+## BYODA status — PARKED (2026-09-01)
+
+BYODA is **not deployed**. xDrip+ is the actual CGM on all three phones. Decision reached after
+the DiaKEM G7 APK patcher proved heavily bit-rotted:
+- Dockerfile base image `openjdk:11.0-jre-buster` was deleted from Docker Hub (fixed locally by
+  switching to `eclipse-temurin:11-jre`).
+- Its auto-download of the stock APK from APKPure now returns **403 Forbidden**.
+- A manually-downloaded G7 APK turned out to be a **split/bundle** (no single AndroidManifest.xml;
+  apktool `versionInfo: null`), and the patches only apply to the exact standalone build
+  **1.6.1.4537**.
+No old patched BYODA APK exists on the Mac or any phone. To revisit later would require a genuine
+standalone `1.6.1.4537` APK (or merging the splits with APKEditor) and hoping the rotted patch set
+still applies — low value vs. xDrip+, which already works. **xDrip+ is primary; this is fine and
+arguably better for offline use.**
+
+## A. Switch/confirm CGM = xDrip+
+
+Why xDrip+ is the CGM here: it can pair and **start a fresh Dexcom G7 session with no Dexcom
+account and no internet** — the best property for a grid-down device. (If BYODA is ever built, it
+would become the accuracy-preferred primary and xDrip+ the backup; until then xDrip+ is primary.)
 
 1. Open **xDrip+** → Settings → Hardware Data Source → **G7 / ONE+**.
 2. Settings → Inter-app settings → **Broadcast Data: ON**, Accept Glucose: OFF.
@@ -16,9 +48,29 @@ backup and stays idle otherwise.
 5. Confirm a BG value appears on the AAPS home screen within 5–10 minutes.
 6. Loop continues automatically once BG flows.
 
-To return to BYODA later: Config Builder → BG Source → BYODA.
-
 **Tested on:** ___________ (date) — retest at every battery top-up that falls on a sensor change.
+
+## A2. xDrip+ misbehaving on a sensor → switch reader to Juggluco
+
+Juggluco (installed on all three phones, self-signed APK from github.com/j-kaltes/Juggluco,
+archived in the kit) is a second, independent G7 reader. It broadcasts to AAPS on the **same
+xDrip channel**, so AAPS needs no reconfiguring beyond having BG Source = xDrip+.
+
+**Critical: only ONE reader active at a time.** xDrip+ and Juggluco both push through the identical
+xDrip broadcast into AAPS — running both at once gives erratic BG. Before enabling Juggluco, stop
+xDrip+ broadcasting (xDrip+ → Settings → Inter-app settings → Broadcast locally: OFF) or don't let
+xDrip+ hold the sensor.
+
+1. In **Juggluco** → left menu (hamburger) → **Settings** → enable **xDrip broadcast**
+   (NOT "Patched Libre"). When prompted for the receiving app, enter **`info.nightscout.androidaps`**
+   and save/confirm.
+2. Juggluco → left menu → **Photo** → scan the data-matrix on the **G7 applicator** to start/read
+   the sensor.
+3. In **AAPS** → Config Builder → **BG Source → xDrip+** (Juggluco rides this same channel).
+4. Confirm a BG value appears on the AAPS home screen within ~5–10 min.
+
+To go back to xDrip+ as the reader: turn Juggluco's broadcast off, re-enable xDrip+ Broadcast
+locally, and let xDrip+ own the sensor.
 
 ## B. DASH pods exhausted → Omnipod Eros
 

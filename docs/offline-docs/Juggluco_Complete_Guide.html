@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juggluco — Complete Offline Guide</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font:15px/1.55 -apple-system,system-ui,Roboto,sans-serif;color:#1a1a1a;background:#f6f7f9;padding:14px}
+.wrap{max-width:860px;margin:0 auto} h1{font-size:22px;margin:0 0 2px}
+.meta{color:#555;font-size:12px;margin-bottom:8px}
+h2{font-size:17px;border-bottom:2px solid #cfd4dc;padding-bottom:5px;scroll-margin-top:8px}
+h3{font-size:15px;margin:14px 0 4px}
+.warn{background:#fff4e5;border:1px solid #f0b37e;border-radius:8px;padding:9px 12px;font-size:12px;margin:10px 0}
+.tip{background:#e8f4ea;border:1px solid #9ccaa6;border-radius:8px;padding:9px 12px;font-size:13px;margin:8px 0}
+#q{width:100%;padding:11px 12px;font-size:15px;border:1px solid #c4cad3;border-radius:8px;margin:8px 0}
+#toc{background:#fff;border-radius:8px;padding:8px 14px;font-size:14px;columns:2;column-gap:20px}
+@media(max-width:560px){#toc{columns:1}} #toc a{display:block;padding:2px 0;text-decoration:none;color:#1257a8}
+section{background:#fff;border-radius:8px;padding:2px 16px 12px;margin:12px 0}
+.src{color:#8a9099;font-size:11px;font-family:monospace;margin:-2px 0 8px}
+code{background:#eceef1;padding:1px 5px;border-radius:4px;font-size:13px} pre{background:#f2f3f5;padding:8px;border-radius:6px;overflow:auto;font-size:12px}
+ul{margin:6px 0 6px 2px;padding-left:20px} li{margin:2px 0}
+.hidden{display:none}
+@media print{body{background:#fff}#q,#toc{display:none}}
+</style></head><body><div class="wrap">
+<h1>Juggluco — Complete Offline Guide</h1>
+<div class="meta">Compiled 2026-09-01 · sources: juggluco.nl help pages + Juggluco GitHub README &amp; wiki + AAPS documentation</div>
+<div class="warn"><b>Compiled offline reference.</b> The <b>AAPS integration</b> section is verbatim from the AGPL AAPS docs. The remaining sections are captured from the official Juggluco help pages (juggluco.nl); wording may differ slightly from the live site. Reference only — not medical advice. Juggluco is by Jaap Korthals Altes; APK from juggluco.nl / SourceForge.</div>
+<input id="q" type="search" placeholder="Search this guide (e.g. broadcast, G7, alarm, pair)…" oninput="F(this.value)">
+<div id="toc">
+<a href="#aaps">1. Feeding AAPS (integration)</a>
+<a href="#broadcast">2. Glucose broadcasts (technical)</a>
+<a href="#intro">3. Overview / how the app works</a>
+<a href="#sensors">4. Connecting sensors (incl. Dexcom G7)</a>
+<a href="#sensorset">5. Sensor screen &amp; connection troubleshooting</a>
+<a href="#settings">6. Settings</a>
+<a href="#alarms">7. Alarms, ringtone &amp; advanced alarms</a>
+<a href="#amounts">8. New Amount, Labels &amp; Meals</a>
+<a href="#search">9. Search</a>
+<a href="#stats">10. Statistics</a>
+<a href="#export">11. Export</a>
+<a href="#mirror">12. Mirror (device-to-device)</a>
+<a href="#talk">13. Talk (speech)</a>
+<a href="#watch">14. Watch / smartwatch</a>
+<a href="#reminders">15. Reminders</a>
+<a href="#float">16. Floating glucose</a>
+<a href="#libre">17. Libreview / Account ID (Libre only)</a>
+<a href="#download">18. Download &amp; install</a>
+</div>
+
+<section id="aaps"><h2>1. Feeding AAPS (integration)</h2>
+<div class="src">Verbatim — AAPS docs / CompatibleCgms/Juggluco.md</div>
+<div class="tip"><b>For your G7 + AAPS setup, this is the key section.</b></div>
+<h3>Disable Nightscout uploader</h3>
+<p>Starting with AAPS 3.2, you shouldn't let any other app upload data (blood glucose and treatments) to Nightscout. Disable any active uploader to Nightscout in Juggluco.</p>
+<h3>Juggluco → AAPS (recommended)</h3>
+<p>Juggluco can send blood glucose directly to AAPS, enabling SMBs always if you are using a trusted sensor. When using a Libre 2/2+/3/3+ sensor, minute-by-minute readings will be sent to AAPS but will not trigger minute-by-minute calculations in AAPS.</p>
+<p><b>Enable xDrip broadcast in Juggluco (do <u>not</u> enable Patched Libre), confirm and save the AAPS package information. Select the xDrip+ BG data source in AAPS.</b> Apply sufficient smoothing in AAPS.</p>
+<div class="tip">Your AAPS package name (full/patient build) is <code>info.nightscout.androidaps</code>. And remember the one-reader rule: only xDrip+ <b>or</b> Juggluco broadcasting into AAPS at a time — never both.</div>
+<h3>Juggluco → xDrip+ (alternative)</h3>
+<p>Juggluco can send blood glucose to xDrip+ which will then send them to AAPS. Enable Patched Libre in Juggluco (do not enable xDrip broadcast), confirm and save the dexdrip package information. Select the xDrip+ BG data source in AAPS. Apply sufficient smoothing in AAPS if necessary.</p>
+</section>
+
+<section id="broadcast"><h2>2. Glucose broadcasts (technical)</h2>
+<div class="src">juggluco.nl/Juggluco/glucosebroadcast.html</div>
+<p>Android applications can receive glucose values every minute from Juggluco. The broadcast sends the latest "Stream" glucose value each minute. For previous values, history, scans, or insulin/carb entries, use the web server in Juggluco.</p>
+<p>Juggluco can imitate xDrip's broadcast (<code>com.eveningoutpost.dexdrip.BgEstimate</code>) or send a new broadcast: <code>glucodata.Minute</code>. The application id must be selected in Juggluco's left menu → Settings, either <b>"xDrip broadcast"</b> or <b>"Glucodata broadcast"</b>.</p>
+<p>Apps targeting Android 11+ only receive the broadcast when they add to their AndroidManifest:</p>
+<pre>&lt;queries&gt;
+    &lt;package android:name="tk.glucodata"/&gt;
+&lt;/queries&gt;</pre>
+<p>Glucodata broadcast constants: ACTION <code>glucodata.Minute</code>; ALARM <code>glucodata.Minute.Alarm</code>; GLUCOSECUSTOM <code>glucodata.Minute.glucose</code>; MGDL <code>glucodata.Minute.mgdl</code>; RATE <code>glucodata.Minute.Rate</code>; SERIAL <code>glucodata.Minute.SerialNumber</code>; TIME <code>glucodata.Minute.Time</code>. Fields: name (from SERIAL), mgdl (int), glucose (float, in settings units), rate (float), alarm (int, bitwise — bit 3 = active alarm; bits 0–2 = level vs thresholds), time (long, ms). Rate label systems provided: xDrip, Dexcom, Libre (DoubleUp…DoubleDown).</p>
+</section>
+
+<section id="intro"><h2>3. Overview / how the app works</h2>
+<div class="src">juggluco.nl/Jugglucohelp/introhelp.html</div>
+<p>Juggluco scans Freestyle Libre sensors via NFC and receives values from Freestyle Libre 2/2+/3/3+, Sibionics GS1Sb and GS3, <b>Dexcom G7/ONE+</b>, Accu-Chek SmartGuide, CareSens Air, and Linx/Lumiflex/Aidex X sensors via Bluetooth.</p>
+<p>Connect to Sibionics GS1Sb, <b>Dexcom G7/ONE+</b>, Accu-Chek SmartGuide, CareSens Air, or Linx/Lumiflex/Aidex X sensors by scanning their data matrix through <b>left menu → Photo</b>. Dexcom G7/ONE+ sensors pair via Bluetooth; confirm pairing promptly or wait five minutes. Keep the screen active during waiting. Samsung Galaxy Watch 4 and 7 bypass pairing confirmation. Expired Dexcom sensors remain reachable over Bluetooth. Prevent erroneous pairing by storing old sensors 15 meters away, and disable previously-connected apps and devices.</p>
+<h3>The four menus</h3>
+<p>Four menus open by touching empty display areas: left quarter → menu 1; left-center → menu 2; right-center → menu 3; right quarter → menu 4.</p>
+<p><b>Menu 4 (right, Movement):</b> navigate the curve; Date for date selection; Search to locate values; first item shows current time and jumps to "now." When "manually scale Glucose"/"manually scale Time" are enabled, screen movement / two-finger distance adjust the axes.</p>
+<p><b>Menu 3 (right-center, Display):</b> Last Scan; Scans; Stream; History; Amounts; Meals; Dark mode. "Stream" = one-minute Bluetooth glucose values (Libre 2/3). Scanning retrieves 15-minute history for the previous 8 hours.</p>
+<p><b>Menu 2 (left-center):</b> Export (.tsv); Mirror (IP/TCP to another Juggluco); New Amount; List; Statistics; Talk; Float (Floating Glucose overlay).</p>
+<p><b>Menu 1 (left):</b> System UI; Menus; Watch; Sensor; Settings; Photo; Close. Settings configures units (mmol/L or mg/dL), labels, alarms, reminders, display ranges. Sensor shows connection status. Photo scans a data matrix. Close exits.</p>
+</section>
+
+<section id="sensors"><h2>4. Connecting sensors (incl. Dexcom G7)</h2>
+<div class="src">juggluco.nl/Juggluco/sensors</div>
+<p><b>In all cases you need to force stop the apps that previously connected with the sensor.</b></p>
+<h3>Dexcom G7 / ONE+</h3>
+<p>Scan the data matrix on the applicator with <b>left menu → Photo</b>. Keep the display on so you don't miss the opportunity to agree to pair the sensor. <b>Extra notes (Juggluco wiki):</b> put other used Dexcom sensors out of Bluetooth reach, and turn off apps/devices previously connected with the sensor (or turn off that device's Bluetooth). If you're too late to agree to pair, wait another 5 minutes. Dexcom G7/ONE+ disconnects after every glucose value (normal). <b>To return to Dexcom's original app:</b> terminate the sensor in Juggluco (left menu → Sensor → Terminate), then start the other app and enter its PIN. Dexcom ONE+ works exactly like G7. First Bluetooth reading can take 2–10 minutes.</p>
+<div class="tip"><b>Keep Juggluco alive in the background:</b> allow background activity, turn off battery optimizations for Juggluco, and don't hide its notification (from the README). This is the same "Unrestricted / never sleeping" idea as your other apps.</div>
+<h3>Other sensors (reference)</h3>
+<ul>
+<li><b>Libre 2 / 2+:</b> scan the sensor at least twice by holding the phone's NFC against it.</li>
+<li><b>Libre 3 / 3+:</b> Settings → Exchange data → Libreview; match account credentials; press "Get Account ID". Can only take over a sensor activated with Abbott's Libre 3 app (same account); cannot take over one started with a Libre 3 reader or the Unified/US Libre app. For Juggluco-only use, select "manual" and enter an arbitrary number.</li>
+<li><b>Sibionics GS1:</b> scan data matrix via Photo; specify type. <b>GS3</b> (Juggluco 10.9.0+): one value per 5 min; bind to account ID.</li>
+<li><b>Accu-Chek SmartGuide:</b> scan the data matrix on the blue cap; enter the PIN also on the cap.</li>
+<li><b>CareSens Air:</b> scan the inner-package data matrix via Photo; only one device at a time.</li>
+<li><b>Aidex X (10.7.0+) / LinX (10.7.2+):</b> scan data matrix or Exchange data → Glucose Meters → Find devices.</li>
+</ul>
+</section>
+
+<section id="sensorset"><h2>5. Sensor screen &amp; connection troubleshooting</h2>
+<div class="src">juggluco.nl/Jugglucohelp/sensorhelp.html</div>
+<ul>
+<li><b>Sensor selection:</b> spinner shows active sensor; choose among multiple.</li>
+<li><b>Doze Mode:</b> battery-optimization link — prevent Juggluco being killed.</li>
+<li><b>Bluetooth History:</b> (Libre 2) receive 15-min history via Bluetooth; slower; no effect on Libre 3 / US-CA-AU-KR Libre 2.</li>
+<li><b>Bug Workaround:</b> Samsung Galaxy Watch 5+ needs it for Libre 3 correct 1-min intervals.</li>
+<li><b>Alarm Clock (⏰):</b> ensures proper <b>Dexcom G7 / ONE+</b> connection timing, especially during deep sleep.</li>
+<li><b>Permissions:</b> Android 12+ needs "Nearby devices" permission for Bluetooth.</li>
+<li><b>Device Address:</b> shown after the identifier; red = US-variant sensor.</li>
+<li><b>Forget:</b> removes stored device address and rescans — sometimes needed to reconnect.</li>
+<li><b>Terminate:</b> stops Bluetooth connectivity to the sensor. <b>Unpair:</b> unbinds Linx/Lumiflex/Aidex X. <b>Clear:</b> wipes values from those sensors. <b>Reset:</b> Sibionics 2 only. <b>Turbo:</b> more connection effort, more battery. <b>Android Connection:</b> last-resort, slower. <b>Info:</b> start/end + last connection.</li>
+</ul>
+<h3>Troubleshooting</h3>
+<p>Successful Bluetooth connection needs: Bluetooth on; a successful scan; the sensor not connected to another reader/app; competing apps uninstalled/disabled/force-stopped. The Connection stage gives the most difficulty; <b>status=133</b> ("Bluetooth device not found") is most common and usually resolves with patience. Fixes: restart Bluetooth, reboot the phone, disconnect interfering devices, rescan the sensor. Body positioning between sensor and watch can block signal. For persistent issues, in Android Settings → Connected Devices choose "Forget."</p>
+</section>
+
+<section id="settings"><h2>6. Settings</h2>
+<div class="src">juggluco.nl/Jugglucohelp/settinghelp.html</div>
+<ul>
+<li><b>Unit:</b> mmol/L or mg/dL.</li>
+<li><b>NFC sound:</b> sound during scanning (plus vibration).</li>
+<li><b>Scanning starts app:</b> launches app on NFC scan even if not shown (Android may show a chooser).</li>
+<li><b>Glucose notification</b> (formerly "Glucose in android status bar"): shows streamed values quietly in the status bar; a dot appears if disabled. Background apps require a visible notification. On some phones values show only after disabling "Set to Silent" in that notification channel.</li>
+<li><b>Floating glucose:</b> small always-on-screen value; first use asks for display-over-other-apps permission.</li>
+<li><b>Alarms:</b> high/low, signal-loss, value-available.</li>
+<li><b>Number labels:</b> labels for insulin/carbs/activity.</li>
+<li><b>Exchange data:</b> transmit data to other apps/servers (web server, Libreview, glucose meters).</li>
+<li><b>Reminders:</b> remind to enter food/medication within time windows.</li>
+<li><b>Google scan:</b> use Google code scanner for data matrices/QR (else zXing).</li>
+<li><b>Display:</b> target range, language, display options.</li>
+</ul>
+</section>
+
+<section id="alarms"><h2>7. Alarms, ringtone &amp; advanced alarms</h2>
+<div class="src">alarmhelp.html · ringtone.html · advancedAlarmshelp.html</div>
+<p><b>Glucose alarms:</b> Bluetooth-streamed values trigger low/high alarms. <b>Low</b> at/below a threshold; <b>High</b> at/above a threshold. <b>Loss of signal</b> if no data within a set time. Alarms stop when: duration expires, curve is touched, notification touched (unlocked), cancel pressed, or Floating Glucose touched. <b>Value available:</b> notified when a temporarily-stopped sensor works again. Category options: "Alarm" (alarm volume, audible when muted), "Notification" (silenced in DND), "Media" (media volume, routes to headphones). <b>Default</b>: which profile applies. <b>Advanced</b>: more alarm types/scheduling.</p>
+<h3>Ringtone</h3>
+<p><b>Minutes deactivated:</b> a continuing low/high won't immediately re-alarm. <b>Sound &amp; Default:</b> toggle audio / use system ringtone. <b>Select:</b> custom ringtone (some Samsung ringtone pickers crash — use an alternative). <b>Vibrate.</b> <b>Disturb:</b> if DND is on, turn it off before playing an alarm. <b>Flash:</b> flashlight for the alert's duration (useful where ringtones aren't allowed).</p>
+<h3>Advanced alarms</h3>
+<ul>
+<li><b>Very low glucose alarm</b> — a second low alarm at a lower threshold.</li>
+<li><b>Very high glucose alarm</b> — a second high alarm at a higher threshold.</li>
+<li><b>Alarm when soon below value</b> — predicted fall below a value soon.</li>
+<li><b>Alarm when soon above value</b> — predicted rise above a value soon.</li>
+<li><b>Schedules</b> — activate a profile at a certain time of day (per-period thresholds/notifications).</li>
+</ul>
+</section>
+
+<section id="amounts"><h2>8. New Amount, Labels &amp; Meals</h2>
+<div class="src">newamount.html · labelhelp.html · mealhelp.html</div>
+<p><b>New Amount:</b> enter numbers tied to a Label (configured in Settings → Number Labels); they display at set heights on the graph. Long-press an entry to edit; view via left-middle menu → List. Supports NovoPen 6 / Echo Plus dose import via NFC, Bluetooth finger-prick meters, a <b>Meal</b> button (build a meal from ingredients with auto carb calc), and an <b>Exclude</b> option to remove a BG reading from calibrations (e.g. during warmup or fast change).</p>
+<p><b>Labels for amounts:</b> create/delete/modify labels to specify insulin, carbohydrate, or physical activity. Renaming a position updates all historical entries at that position. Assign one label as "Meal" to get a Meal button in New Amount.</p>
+<p><b>Meals:</b> specify ingredient quantities; total carbohydrate is calculated (or specify total carbs and it computes the ingredient quantity). "Add item" to add ingredients; "Define" to create a new ingredient (name + carb content); "Database" opens a food-composition database to search foods and insert name/carbs.</p>
+</section>
+
+<section id="search"><h2>9. Search</h2>
+<div class="src">juggluco.nl/Jugglucohelp/searchhelp.html</div>
+<p>Locate glucose readings and logged data. Search for values between given numbers (e.g. 10–999). Categories: Scan, History, History Calibrated, Stream, Stream Calibrated. Also find insulin/food/activity entries by selecting a label and a numeric range, with time-based filtering (e.g. lows in evening/early-morning hours). An arrow initiates the search direction; Reset restores parameters. Meal-ingredient search is possible when a label is designated as meals.</p>
+</section>
+
+<section id="stats"><h2>10. Statistics</h2>
+<div class="src">juggluco.nl/Jugglucohelp/stathelp.html</div>
+<p>Statistics from "AGP" with minor modifications; analyzed days set via <b>Days</b>. Data derive from the minute-by-minute Bluetooth values ("stream"). Left side shows time-in-range percentages (standard ranges always; a custom target range from Settings → Display shows below). <b>% of time active</b> = percentage of time Juggluco received values. <b>Estimated A1C</b> (Nathan 2008 formula). <b>GMI</b> (2018 formula; shown in Abbott's Libre 3 app). <b>Glucose Variability</b> = %CV = (SD/mean)×100%. <b>Save</b> generates a printable PDF report (needs web server enabled). <b>Summary graph</b> (≥9 days of stream data) shows glucose distribution across each minute of the day with median line and concentration shading.</p>
+</section>
+
+<section id="export"><h2>11. Export</h2>
+<div class="src">juggluco.nl/Jugglucohelp/helpexport.html</div>
+<p>Meals are saved in HTML; all other data in .tsv (Tab-separated, UTF-8) — works with spreadsheets. <b>Time Range</b> (7.1.0+): choose how many days; end date = right edge of current view. <b>Calibrated values</b>: store processed and raw across data types; in Libreview format, calibrated values take priority. <b>Libreview compatibility</b>: convert to Libreview format (Dexcom/Sibionics/Libre have specific behaviors). Data can also be retrieved via the web server (Settings → Exchange data).</p>
+</section>
+
+<section id="mirror"><h2>12. Mirror (device-to-device)</h2>
+<div class="src">juggluco.nl/Jugglucohelp/connectionoverview.html</div>
+<p>Mirror transmits data between devices (IP/TCP, or Bluetooth in 11.0.0+) so another Juggluco shows identical data. After receiving scan data, the mirror device can establish its own Bluetooth sensor connection; "Bluetooth use" auto-disables when IP/TCP data arrives (prevents multiple device-sensor contacts). Local Wi-Fi IP shows after "WLAN"; enter it on the connecting device; adjust the <b>Port</b>. "Add connection" specifies hosts/methods. Set Doze mode (battery optimizations disrupt network). <b>Mirror sends amounts</b>, <b>Sync</b>, <b>Reinit</b>, <b>Auto QR</b>, <b>Wifi</b> (WearOS). Usage abbreviations: n=amounts, s=scans, b=stream, r=receive. Also runs on desktop via Android emulator/Waydroid receiving data over Mirror.</p>
+</section>
+
+<section id="talk"><h2>13. Talk (speech)</h2>
+<div class="src">juggluco.nl/Jugglucohelp/talkhelp.html</div>
+<p><b>Speak glucose:</b> speaks values as they arrive. <b>Seconds between</b>, <b>Voice</b>, <b>Speed</b>, <b>Pitch</b>, <b>Test</b>. Some phones need Android text-to-speech changes (on Samsung set "Google text-to-speech"). <b>Talk touch:</b> speaks on touching current glucose, graph/scan points, amounts, corner dates, long-pressed menu items/amounts. <b>Speak messages</b> reads temporary on-screen messages and scan results. <b>Speak Alarms</b> speaks the level at start and stop of Low/High alarms. <b>Profile</b> selects the active profile (Alarms + Talk settings are per-profile). <b>Schedules</b> activate a profile at a time of day. <b>Volume</b>: with MEDIA off, Notification slider controls it (silenced in DND); with MEDIA on, media volume (often audible in DND).</p>
+</section>
+
+<section id="watch"><h2>14. Watch / smartwatch</h2>
+<div class="src">juggluco.nl/Jugglucohelp/watchinfo.html</div>
+<p>Seven ways to show glucose on a watch: <b>Notify</b> (Android notification per value; "Separate" enables alarm notifications on some watches); <b>Watchdrip</b> (MiBand/Amazfit via Watchdrip+); <b>GadgetBridge</b> (glucose disguised as weather data); <b>Kerfstok</b> (watch app with activity + manual insulin entry); <b>Broadcast</b> (third-party apps like G-Watch relay to watches); <b>xDrip Watch Apps</b> (Juggluco's built-in xDrip/Nightscout webserver — fresher than traditional xDrip; Fitbit discontinued mid-2024); <b>Wear OS Juggluco</b> (dedicated Wear OS version + watch face over Bluetooth).</p>
+<h3>WearOS watch hardware compatibility (Juggluco wiki)</h3>
+<p>Watch must be WearOS (Android 8+); Juggluco can't use the watch's NFC — scanning is always done with the phone. Community notes: <b>Samsung Galaxy Watch 4</b> works best with Juggluco (reliable when phone-connected or same-arm direct; ~24 h battery). <b>Galaxy Watch 5–7/Ultra</b> must reconnect every minute for minute-sending sensors (drains battery); fine with 5-minute sensors (Accu-Chek SmartGuide) — and G7 disconnects every reading anyway. <b>OnePlus Watch 3</b> (larger 648 mAh) works very well, up to ~3 days phone-sensor (disable "Auto hibernation"); the 43mm version has half the battery. <b>TicWatch Pro</b> works like Watch 4 but turns Bluetooth off when very still (during sleep) — `adb shell dumpsys deviceidle disable` helps. <b>Pixel Watch 3</b> reported good. Full list: juggluco.nl/JugglucoWearOS/watches.html. (You're not using a watch — included for completeness.)</p>
+</section>
+
+<section id="reminders"><h2>15. Reminders</h2>
+<div class="src">juggluco.nl/Jugglucohelp/reminders.html</div>
+<p>Notifies when you fail to log a specified amount within a time window. Press <b>NEW</b>; set begin/end times for entering at least a given amount under a label. At the end time, if not recorded, a notification + audio alert fires. Example: "Levemir 6.0, 21:30–23:55" → reminded after 23:55 if fewer than 6 units of Levemir were logged after 21:30. Works after reboot without launching the app. Huawei: Settings → Battery → App launch → set Juggluco to "Manually managed" (Auto-Launch + Run in Background) — also needed for signal-loss alarms after reboot.</p>
+</section>
+
+<section id="float"><h2>16. Floating glucose</h2>
+<div class="src">juggluco.nl/Jugglucohelp/floatingconfig.html</div>
+<p>Always-on-screen glucose value over other apps, with font size/color options. <b>Touchable</b>: reposition by dragging, shrink by long-press; when off, touches pass through to apps beneath (double-tap to disable touch). <b>Transparent</b>, <b>Above</b> (visible even when Juggluco is active), <b>Time</b> display, <b>Active</b> toggle. WearOS/Android Automotive need: <code>adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</code>.</p>
+</section>
+
+<section id="libre"><h2>17. Libreview / Account ID (Libre only — not needed for G7)</h2>
+<div class="src">libreview.html · getaccountidhelp.html</div>
+<p><b>Get Account ID</b> (for Libre 3 NFC scanning): "Manually" enter the ID, or "From Libreview" authenticate with email/password to receive it. You can send data to one Libreview account while Abbott's app uses another. <b>Libreview settings:</b> Send to Libreview (auto on app exit unless synced within 20 min; or "Send now"); Send Amounts; RU (libreview.ru, Libre 2 only); Immediate (real-time for LibreLinkUp); Spy Views; Change Start (restart transmission from a date). Not relevant to Dexcom G7.</p>
+</section>
+
+<section id="download"><h2>18. Download &amp; install</h2>
+<div class="src">juggluco.nl/Juggluco/download.html</div>
+<p>Runs on Android 5.0+ (Android 8 needed for Libre 3). Usual phone build: <b>Arm64</b> APK from SourceForge (project: juggluco). Installing the APK updates the existing app. WearOS and "small" (Android Wear, Libre 2 only) builds exist. A logging build is available for bug reports.</p>
+<div class="tip">For the kit: download the arm64 phone APK, archive it (self-signed, never expires). All versions are signed with the same key, so updates install over the top. Old versions: APKPure / SourceForge / the developer's Google Drive.</div>
+<p><b>Downgrade:</b> to install a lower version number, first install the "Downgrade version," then <code>adb install -d -r releaseAPK</code>. A "Second exemplar" (different Application ID) lets two Juggluco instances run on one phone for two people.</p>
+</section>
+
+</div><script>
+function F(q){q=(q||'').trim().toLowerCase();var s=document.querySelectorAll('section');var t=document.getElementById('toc');
+if(!q){s.forEach(function(e){e.classList.remove('hidden')});t.classList.remove('hidden');return}
+t.classList.add('hidden');
+s.forEach(function(e){e.classList.toggle('hidden', e.textContent.toLowerCase().indexOf(q)===-1)});}
+</script></body></html>

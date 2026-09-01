@@ -1,0 +1,1419 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>xDrip+ Official Docs (Offline)</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font:15px/1.55 -apple-system,system-ui,Roboto,sans-serif;color:#1a1a1a;background:#f6f7f9;padding:14px}
+.wrap{max-width:860px;margin:0 auto} h1{font-size:21px;margin:0 0 2px}
+.meta{color:#555;font-size:12px;margin-bottom:8px}
+.warn{background:#fff4e5;border:1px solid #f0b37e;border-radius:8px;padding:9px 12px;font-size:12px;margin:10px 0}
+#q{width:100%;padding:11px 12px;font-size:15px;border:1px solid #c4cad3;border-radius:8px;margin:8px 0}
+#toc{background:#fff;border-radius:8px;padding:8px 14px;font-size:14px;max-height:40vh;overflow:auto}
+#toc .tg{font-weight:700;margin:8px 0 2px;color:#334} #toc a{display:block;padding:2px 0 2px 8px;text-decoration:none;color:#1257a8}
+section{background:#fff;border-radius:8px;padding:2px 16px 12px;margin:12px 0;scroll-margin-top:10px}
+section h2{font-size:17px;border-bottom:2px solid #cfd4dc;padding-bottom:5px}
+.src{color:#8a9099;font-size:11px;font-family:monospace;margin:-4px 0 8px}
+.imgnote{color:#88707a;font-style:italic;font-size:12px}
+code{background:#eceef1;padding:1px 4px;border-radius:4px;font-size:13px} pre{background:#f2f3f5;padding:8px;border-radius:6px;overflow:auto}
+table{border-collapse:collapse} td,th{border:1px solid #dde1e6;padding:4px 8px}
+img{max-width:100%} .hidden{display:none}
+@media print{body{background:#fff} #q,#toc{display:none}}
+</style></head><body><div class="wrap">
+<h1>xDrip+ Official Docs (Offline)</h1>
+<div class="meta">Verbatim offline copy · Sources: NightscoutFoundation/xDrip README + Documentation + wiki, 2026-09-01</div>
+<div class="warn"><b>Verbatim archive for personal offline use.</b> Text reproduced from the official source (AGPL-3.0, redistribution permitted). Reference only — not medical advice. Screenshots are omitted to keep this a single small file; they remain in the source.</div>
+<input id="q" type="search" placeholder="Search all pages…" oninput="F(this.value)">
+<div id="toc"><div class="tg">General</div>
+<a href="#s1">xDrip+ — README / Overview</a>
+<a href="#s2">BlueJay Tasker</a>
+<a href="#s3">Required:</a>
+<a href="#s4">Notes regarding the Caresens Dual Glucose + Ketone meter</a>
+<a href="#s5">Device-Universe</a>
+<a href="#s6">Diamond-Mini---Mobile-Glucose-Meter</a>
+<a href="#s7">Enabling-Debugging-for-OB1-collector</a>
+<a href="#s8">Engineering Mode is a special mode designed for Developers</a>
+<a href="#s9">Frequently-Asked-Questions-(FAQs)</a>
+<a href="#s10">Grafana-Notes</a>
+<a href="#s11">Guide-for-using-OB1-G5-Internal-Algorithm-Feature</a>
+<a href="#s12">Home</a>
+<a href="#s13">How-to-get-the-Nightlies-on-Automatic-Update</a>
+<a href="#s14">What is this?</a>
+<a href="#s15">Integration with xDrip+ via Broadcast Intent</a>
+<a href="#s16">InPen-experimental-feature</a>
+<a href="#s17">Kotlin_Policy</a>
+<a href="#s18">If you have a lot of missed readings:</a>
+<a href="#s19">Local Web Services</a>
+<a href="#s20">Patching-Android-Wear-devices-for-use-with-the-G5</a>
+<a href="#s21">Phones which have achieved high capture rate</a>
+<a href="#s22">Quick Start</a>
+<a href="#s23">README-xdrip-original</a>
+<a href="#s24">Using-the-Medtrum-A6</a>
+<a href="#s25">Choosing a Watch</a></div>
+<section id="s1" data-top="General"><h2>xDrip+ — README / Overview</h2><div class="src">00_README.md</div><h1 id="xdrip-readme-overview">xDrip+ — README / Overview</h1>
+<h1 id="nightscout-xdrip">Nightscout xDrip</h1>
+<blockquote>
+<p>Enhanced personal research version of xDrip</p>
+</blockquote>
+<p><span class="imgnote">[screenshot omitted — see source]</span><br />
+ Info page and APK download: https://jamorham.github.io/#xdrip-plus</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span><a align="right" title="Crowdin" target="_blank" href="https://crowdin.com/project/xdrip"><span class="imgnote">[screenshot omitted — see source]</span></a></p>
+<h2 id="features">Features</h2>
+<ul>
+<li>Voice, Keypad or Watch input of Treatments (Insulin/Carbs/Notes)</li>
+<li>Visualization of Insulin and Carb action curves + Undo/Redo</li>
+<li>Improved alerts and predictive low forecasting feature</li>
+<li>Instant data synchronization between phones and tablets</li>
+<li>Support for many different data sources</li>
+<li>Published by the Nightscout Foundation</li>
+</ul>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<h2 id="what-does-it-do">What does it do?</h2>
+<p>xDrip is an unofficial and independent Android app which works as data hub and processor between many different devices.</p>
+<p>It supports wireless connections to G6, G7, Medtrum A6, Libre via NFC and Bluetooth, 630G, 640G, 670G pumps, CareSens Air and Eversense CGM via companion apps. Bluetooth Glucose Meters such as the Contour Next One, AccuChek Guide, Verio Flex &amp; Diamond Mini as well as devices like the Pendiq 2.0 Insulin Pen.</p>
+<p>Heart-rate and step counter data is processed from Android Wear, Garmin, Fitbit and Pebble smart-watches and watch-faces for those that show glucose values and graphs.</p>
+<p>On some Android Wear watches, it is possible for the G6 to talk directly to the watch so it can display values even when out of range of the phone.</p>
+<p>The app contains sophisticated charting, customization and data entry features as well as a predictive simulation model.</p>
+<p>Instant two-way synchronization is possible by linking follower handsets, data can also be uploaded and downloaded to a Nightscout web service or uploaded directly to Tidepool, MongoDB or InfluxDB.</p>
+<p>Customization allows for different options to configure alarms, vocalize readings, change the display preferences etc. International users can update translations from within the app too.</p>
+<p>Your data is yours and can be exported in many different ways. xDrip also intercommunicates with other apps, for example sending and receiving live data with AndroidAPS.</p>
+<h2 id="ethos">Ethos</h2>
+<ul>
+<li>Developed using Rapid Prototyping methodology</li>
+<li>Immediate results favoured to prove concepts</li>
+<li>Designed to support my personal research goals</li>
+<li>User Choice always a high priority</li>
+<li>No registration or Internet access required</li>
+<li>Community testing and collaboration appreciated!</li>
+</ul>
+<h2 id="roadmap">Roadmap</h2>
+<ul>
+<li>Calibration improvements</li>
+<li>Supporting the large family of devices</li>
+<li>Increasing automation and data backup and sync options</li>
+<li>More Nightscout and APS integration</li>
+</ul>
+<h2 id="collaboration">Collaboration</h2>
+<p>We are very happy if people want to collaborate with this project. Please contact us at <a href="https://github.com/NightscoutFoundation/xDrip/discussions">Discussions</a> if you want to get involved and study the <a href="CONTRIBUTING.md">collaboration guidelines</a> before submitting any patches or pull requests.</p>
+<h2 id="thanks">Thanks</h2>
+<p>None of this would be possible without all the hard work of the xDrip and Nightscout communities who have developed such excellent software and allowed us to build upon it.</p></section>
+<section id="s2" data-top="General"><h2>BlueJay Tasker</h2><div class="src">BlueJay_Tasker.md</div><h1 id="bluejay-tasker">BlueJay Tasker</h1>
+<p>The BlueJay xDrip interface allows for two-way interaction with Tasker via Android Broadcast Intents.</p>
+<p>These can be used within Tasker or as a reference for implementation in other Android apps.</p>
+<h4 id="prerequisites">Prerequisites:</h4>
+<ul>
+<li>Nightly version of xDrip</li>
+<li><code>Enable Remote API</code> switched on in BlueJay advanced settings</li>
+<li>BlueJay X2 with firmware 2093 or above</li>
+<li>Tasker Android App</li>
+</ul>
+<h3 id="displaying-text-on-the-bluejay">Displaying Text on the BlueJay:</h3>
+<p><a href="https://taskernet.com/shares/?user=AS35m8ke%2BaXfrfvOOvtrlCrJ9oEv8iYfsWFYUKYvLtaQW2lBAaoV7LJPj7fT0gOjcej%2BgG7Aux%2Bc&amp;id=Task%3ABlueJay+Text">Click this link on your mobile device to install the example task to display text</a></p>
+<p>Activating this task will display text on the BlueJay screen</p>
+<h3 id="displaying-a-multiple-choice-dialog">Displaying a multiple choice dialog:</h3>
+<p><a href="https://taskernet.com/shares/?user=AS35m8ke%2BaXfrfvOOvtrlCrJ9oEv8iYfsWFYUKYvLtaQW2lBAaoV7LJPj7fT0gOjcej%2BgG7Aux%2Bc&amp;id=Task%3ABlueJayDialog">Click this link on your mobile device to install the example task to display a multiple choice dialog</a></p>
+<p>Activating this task will present a 4-way choice dialog. Select by tilting, long pres to confirm.</p>
+<p>To cancel simply do nothing, the dialog will timeout.</p>
+<p>Choice items in the parameter are delimited with the ^ character.</p>
+<p>Confirmed selection will be sent to tasker.</p>
+<h3 id="displaying-and-setting-a-persistent-multiple-choice-dialog">Displaying and setting a persistent multiple choice dialog:</h3>
+<p><a href="https://taskernet.com/shares/?user=AS35m8ke%2BaXfrfvOOvtrlCrJ9oEv8iYfsWFYUKYvLtaQW2lBAaoV7LJPj7fT0gOjcej%2BgG7Aux%2Bc&amp;id=Task%3ABlueJayDialog+Persistent">Click this link on your mobile device to install the example task to display a multiple choice dialog that is persistent</a></p>
+<p>Activating this task will present a 4-way choice dialog. Select by tilting, long press to confirm.</p>
+<p>Note the <code>S1</code> 5th parameter item which causes this to be saved in persistent slot 1.</p>
+<p>To activate a persistently stored dialog on the watch, long-long press then release, tilt to select, long press to confirm.</p>
+<p>Chosen item text will be delivered to Tasker as an event.</p>
+<p>Persistent choice dialogs allow for arbitrary Tasker actions to be initiated from the watch.</p>
+<h3 id="reacting-to-incoming-events">Reacting to incoming events:</h3>
+<p><a href="https://taskernet.com/shares/?user=AS35m8ke%2BaXfrfvOOvtrlCrJ9oEv8iYfsWFYUKYvLtaQW2lBAaoV7LJPj7fT0gOjcej%2BgG7Aux%2Bc&amp;id=Profile%3ABlueJay+Event+Incoming">Click this link on your mobile device to install a profile to receive broadcast intents</a></p>
+<p><a href="https://taskernet.com/shares/?user=AS35m8ke%2BaXfrfvOOvtrlCrJ9oEv8iYfsWFYUKYvLtaQW2lBAaoV7LJPj7fT0gOjcej%2BgG7Aux%2Bc&amp;id=Task%3ABlueJay+Event+Handle">Click this link on your mobile device to install an example event handler</a></p>
+<p>Install the above two items and modify the Option text and resulting actions in the event handler to your own needs.</p>
+<p>If you are using choice dialogs you will probably want to disable the long press beep example but it can be useful during debugging.</p>
+<h3 id="erasing-the-persistent-dialog">Erasing the persistent dialog:</h3>
+<p><a href="https://taskernet.com/shares/?user=AS35m8ke%2BaXfrfvOOvtrlCrJ9oEv8iYfsWFYUKYvLtaQW2lBAaoV7LJPj7fT0gOjcej%2BgG7Aux%2Bc&amp;id=Task%3ABlueJayDialog+Erase+Persistent">Click this link on your mobile device to install an example task to clear the persistent dialog</a></p>
+<h4 id="troubleshooting">Troubleshooting:</h4>
+<p>If the events from the watch to Tasker seem unreliable then check the following two solutions:</p>
+<ul>
+<li>
+<p>Go in to xDrip Inter-app settings and select <code>Identify Receiver</code> check that this includes:<br />
+<code>net.dinglisch.android.taskerm</code></p>
+</li>
+<li>
+<p>Exit to Tasker home screen, then use the Android app show button and swipe Tasker off. It seems to sometimes have caching issues.</p>
+</li>
+</ul></section>
+<section id="s3" data-top="General"><h2>Required:</h2><div class="src">blukon.md</div><h1 id="required">Required:</h1>
+<ul>
+<li>xDrip+ installed</li>
+<li>PIN code from Blucon</li>
+<li>Blucon placed on top of Libre Sensor</li>
+</ul>
+<h1 id="howto">Howto:</h1>
+<ul>
+<li>Unpair Blucon (from any devices where you could have already paired your Blukon with) <br />
+via Settings -&gt; Connected Devices -&gt; Bluetooth -&gt; BLU00XXX -&gt; Forget</li>
+<li>Download and install latest version from https://github.com/NightscoutFoundation/xDrip/releases</li>
+<li>Install xDrip+ and Open App</li>
+<li>Accept all app prompts</li>
+<li>In the top left "burger" menu:</li>
+<li><code>settings -&gt; Hardware Data source -&gt; Libre Bluetooth</code></li>
+<li><code>settings -&gt; Less Common Settings</code><ul>
+<li><code>Advanced calibration</code></li>
+<li><code>Calibration plugin -&gt; datricsae</code></li>
+<li>Select <code>Use Plugin Glucose</code></li>
+<li>if you want [EXPERIMETAL] <code>Non-fixed Libre slopes</code></li>
+</ul>
+</li>
+<li><code>Bluetooth settings</code> select <em>ONLY</em>:<ul>
+<li><code>Turn Bluetooth ON</code></li>
+<li><code>Bluetooth watchdog</code></li>
+<li><code>timer for BT watchdog</code> = 13min</li>
+<li><code>Trust Auto-connect</code></li>
+<li><code>Always discover services</code> </li>
+</ul>
+</li>
+<li>Enable <code>Agressive servive restarts</code></li>
+<li>Enable <code>Display Bridge Battery</code></li>
+<li><code>Other misc options</code>:<ul>
+<li><code>Retrieve Libre history</code></li>
+</ul>
+</li>
+<li><code>settings -&gt; Alarms and Alerts</code><ul>
+<li><code>Missed reading alert</code></li>
+<li>8 minutes</li>
+<li>5 minutes before raising</li>
+</ul>
+</li>
+<li>Make sure that Blucon is on top of sensor</li>
+<li>Press reset on blucon</li>
+<li>In the top left "burger" menu, open Bluetooth Scan and Scan for BLU00XXX device</li>
+<li>Once found select it and enter PIN (PIN can be found on the side of the Blucon device)</li>
+<li>xDrip+ should ask to start sensor, if not select Start Sensor from top left "burger" menu.</li>
+<li>Select the time/date you attached the sensor when asked.</li>
+<li>Your Blucon should now be linked with your phone, you will now need to wait between 10 and 15 minutes.</li>
+<li>After 2 BG readings from Blucon, xDrip+ will ask you to enter one or two calibrated value (blood prick).</li>
+<li>Enter this now.</li>
+</ul>
+<h1 id="if-lots-of-connection-issues">If lots of connection issues:</h1>
+<ul>
+<li>Under Bluetooth settings, try <code>Allow blucon unbunding</code></li>
+<li>look this page: <a href="./libre-fix-bt-connection-issues.md">libre-fix-bt-connection-issues.md</a></li>
+</ul>
+<h1 id="regarding-battery">Regarding battery:</h1>
+<ul>
+<li>best is simply to exchange it together with the sensor (every 14 days)</li>
+<li>Low battery will be detected and we suggest then changing it as soon as possible. Detection is not perfect</li>
+<li>@keencave: I think the edge measured with a voltage meter is &lt; 2.8x V. In my test setup I feeded the system with an adjustable power source down to 2,65 V before I see the battery low indication message. As any battery has an idle voltage and an internal resistance this will lead to a slightly higher voltage in real life. I guess that the peak current to drive the RF circuit is too low with voltages &lt; ~2.8x Vs. My last 4 batteries all have had a voltage &gt; 2.8x V after 14 days and I got no battery low indication at all. Seems that 2.8 V measured with a voltage meter is a good citeria to check wether an unknown battery can be used or not. Fresh ones should have &gt;3.2x V.</li>
+</ul>
+<h1 id="if-really-nothing-works">If really nothing works</h1>
+<p>You might have a hardware issue, please check this:<br />
+* is led flashing shortly when you push 2 times reset button?<br />
+ * If not maybe battery empty<br />
+ * Battery contacts need maybe to be bent a bit (be careful).<br />
+ * Or your device is maybe dead<br />
+  * need claim it.<br />
+  * did you try first with manufacturer App?</p>
+<h1 id="if-issues-with-wear">If issues with Wear</h1>
+<ul>
+<li>With wear 2.0 you need to uninstall app and reinstall it</li>
+<li>Enable Wear logs: <code>Settings -&gt; Smart Watch Features -&gt; Android Wear Integration -&gt; Send wear Logs</code> </li>
+<li>Send/check your logs</li>
+</ul>
+<p>Credits to: @StoneISStephan and @gregorybel</p></section>
+<section id="s4" data-top="General"><h2>Notes regarding the Caresens Dual Glucose + Ketone meter</h2><div class="src">CareSens-Dual-Glucose-Meter.md</div><h1 id="notes-regarding-the-caresens-dual-glucose-ketone-meter">Notes regarding the Caresens Dual Glucose + Ketone meter</h1>
+<p>This meter is supported as of the Sat 9th June 2018 nightly.</p>
+<h2 id="pairing">Pairing</h2>
+<p>This meter is only Bluetooth discoverable while in the pairing mode. To use it with xDrip you should follow this sequence:</p>
+<ul>
+<li>Ensure you have taken at least 1 blood test with the meter</li>
+<li>Make sure the meter is forgotten within Android Bluetooth settings so that it is not paired.</li>
+<li>Open xDrip+ <code>Settings</code> -&gt; <code>Glucose Meters</code> section</li>
+<li>Long press the <code>S</code> button on the meter until you see <code>SET</code> on the screen</li>
+<li>Press the <code>&gt;</code> button so you see <code>YES</code> displayed, then press the <code>S</code> button again</li>
+<li>You should now see <code>BT</code> displayed on the screen, press the <code>&gt;</code> button until you see <code>PAIR</code> displayed and press <code>S</code> again. The display should say <code>PIN</code></li>
+<li>Now quickly select <code>Scan for Bluetooth Meter</code> in xDrip settings and then select <code>CareSens xxxx</code> from the list.</li>
+<li>Now watch for a pairing dialog to appear on the phone. It should ask you for a pin code</li>
+<li>Look at the bottom of the meter screen it will have a 6 digit number which you enter in to the phone to pair.</li>
+<li>If all goes successfully you should hear beeps as xDrip syncs the data from the meter and then allows auto-meter-start to be enabled.</li>
+</ul>
+<p>After pairing, the only time xDrip will be able to connect to the meter is if there is new data available or if you enable the pairing mode again. Although after successful pairing this will just wake up the bluetooth on the meter allowing you to test that xDrip is still receiving data.</p>
+<h2 id="limitations">Limitations</h2>
+<p>This meter doesn't allow us to read the internal clock to determine the actual time that a reading was taken, but it does allow us to set the clock. Every time the meter connects to xDrip it will have its clock set to the current phone time. </p>
+<p>This should mostly ensure accurate times on readings, but there is still a potential issue that the first reading you take after daylight saving time begins or ends will appear an hour offset. </p>
+<p>One way to avoid this problem would be to manually adjust the clock of the meter before you take the reading when the clocks change or place the meter in to pairing mode which allows xDrip to connect to it and sync the data at which point xDrip will update the clock for you.</p>
+<h2 id="ketone-readings">Ketone readings</h2>
+<p>This meter also supports ketone measuring. xDrip can handle this and will sync these readings, but at the time of writing nothing is done with them, but you can check them in the event log by searching for <code>ketone</code> </p>
+<h2 id="general-design-notes">General Design Notes</h2>
+<p>This is quite an easy meter to operate. It is a little larger than I like but as its a dual glucose and ketone meter that is acceptable. The display is easy to read and the buttons easy to operate. Only a small amount of blood is needed. The case seems pretty good with a sensible clear section over the display.</p>
+<p>I wish it was a little more helpful with Bluetooth discovery but I expect the way it is implemented is to conserve power which is probably quite an effective optimization. Time will tell whether it syncs as reliably as other devices.</p>
+<p>If any meter manufacturers would like me to integrate support to xDrip for their meter or appraise the technical implementation of their Bluetooth support etc, feel free to get in touch.</p></section>
+<section id="s5" data-top="General"><h2>Device-Universe</h2><div class="src">Device-Universe.md</div><p>xDrip has data collectors for many different devices:</p>
+<ul>
+<li><strong>G5</strong> <ul>
+<li>Standard G5 collector</li>
+<li>OB1 G5 collector</li>
+</ul>
+</li>
+<li><strong>G4</strong><ul>
+<li>xBridge bluetooth</li>
+<li>xDripkit </li>
+<li>Classic xdrip bluetooth circuit</li>
+<li>Wifi Wixel collector (Raspberry Pi / Dexterity Android TV)</li>
+<li>Parakeet (Google app engine or Raspberry Pi based)</li>
+<li>G4 Bluetooth Share receiver</li>
+</ul>
+</li>
+<li><strong>Libre</strong><ul>
+<li>Scan using Phone based NFC</li>
+<li>LibreAlarm using SW3 smartwatch</li>
+<li>LimiTTer device</li>
+<li>Rfduino device</li>
+<li>Blucon</li>
+<li>Bluereader</li>
+</ul>
+</li>
+<li><strong>640G</strong> - Via companion app</li>
+<li><strong>Eversense</strong> - Via companion app</li>
+</ul></section>
+<section id="s6" data-top="General"><h2>Diamond-Mini---Mobile-Glucose-Meter</h2><div class="src">Diamond-Mini---Mobile-Glucose-Meter.md</div><h2 id="notes-regarding-the-diamond-mini-dm30b-meter-from-fora">Notes regarding the Diamond Mini DM30b meter from Fora</h2>
+<p>The test unit for this was supplied with firmware version 1.2.4, future versions may differ. It is supported by xDrip as of June 6th 2018 nightly.</p>
+<h3 id="pairing">Pairing</h3>
+<p>According to the manual for this meter, Bluetooth pairing is accessed by turning the meter on using the recessed <code>Set</code> button on the back of the meter (using a paper-clip) and then stepping through the menus by repeatedly pressing the <code>Set</code> button until <code>PAR</code> appears after the <code>AL4</code> menu item and then pressing the <code>Action</code> button.</p>
+<p>On my meter this <code>PAR</code> menu is completely missing. Instead I had to follow the procedure below to pair the meter:</p>
+<ul>
+<li>Turn meter on by pressing the <code>Action</code> button</li>
+<li>Repeatedly press the <code>Action</code> button to step through previous readings until it says <code>END</code> and then <code>OFF</code> as soon as you see <code>OFF</code> appear, press and hold the <code>Set</code> button using a paperclip until you see the blue light flashing on the front. Now quickly use xDrip to scan and connect to the meter. You must have at least 1 glucose reading already stored in the meter.</li>
+</ul>
+<h3 id="limitations">Limitations</h3>
+<p>This meter in my opinion is not fully compliant with the Bluetooth Glucose meter standards. One of the main features which is missing is access to the internal clock. This means we cannot tell if the meter clock is incorrect. We have to trust the time-stamps presented by the meter.</p>
+<p><strong>What this means is that you must ensure the meter clock is maintained accurately and especially during transitions to/from daylight saving time or your glucose results will appear in the wrong position in xDrip.</strong></p>
+<p>Also keep an eye on the clock that it may drift by a few minutes over extended usage. To set the clock follow the procedure described in the manual.</p>
+<h3 id="general-design-notes">General design notes</h3>
+<p>This meter also presents data with the sequence numbers reversed meaning special work-arounds are needed in the code. If the manufacturer changes this in a future firmware version then the code may also need to be adjusted again. If you have one of these meters which is not working correctly with xDrip please contact me and we can examine what may have changed.</p>
+<p>Additionally the meter displays a sad face emoji when glucose levels are out of range. This in my opinion is a design mistake because it can have the effect of psychologically shaming a diabetic by presenting a number as "bad". This can discourage testing which is the exact opposite thing that a glucose meter should be doing.</p>
+<h4 id="_1"></h4>
+<p>If any meter manufacturers would like me to integrate support to xDrip for their meter or appraise the technical implementation of their bluetooth support etc, feel free to get in touch.</p></section>
+<section id="s7" data-top="General"><h2>Enabling-Debugging-for-OB1-collector</h2><div class="src">Enabling-Debugging-for-OB1-collector.md</div><p>The OB1 G5 collector doesn't store much log information by default.</p>
+<p>If you are wishing to submit logs to assist with debugging the collector on a particular device then first you need to enable full logging.</p>
+<p>To do this the <code>Extra Tags for Logging</code> need to be set to <code>Ob1G5CollectionService:v,Ob1G5StateMachine:v</code> the easiest way to set this is to scan this QR code using the <code>Settings</code> -&gt; <code>Auto configure</code> option.</p>
+<p><span class="imgnote">[screenshot: ]</span></p></section>
+<section id="s8" data-top="General"><h2>Engineering Mode is a special mode designed for Developers</h2><div class="src">Engineering-Mode.md</div><h1 id="engineering-mode-is-a-special-mode-designed-for-developers">Engineering Mode is a special mode designed for Developers</h1>
+<p>Enabling Engineering Mode unlocks certain features, often related to debugging or items considered especially unsafe.</p>
+<p>If you enable Engineering mode, be sure that you know what you are doing.</p>
+<h2 id="enabling-engineering-mode">Enabling Engineering Mode</h2>
+<ul>
+<li>From the xDrip home screen press the Treatment button <span class="imgnote">[screenshot: Syringe icon]</span> </li>
+<li>Now either tap the Microphone icon to speak or long press it to type text.</li>
+<li>Speak or Type the command <code>enable engineering mode</code></li>
+</ul>
+<p>If it worked then you should see a pop-up message saying that engineering mode is enabled.</p>
+<hr />
+<h2 id="disabling-engineering-mode">Disabling Engineering Mode</h2>
+<p>Go to <code>Settings</code> -&gt; <code>Less Common Settings</code> -&gt; <code>Engineering Mode</code> and uncheck the checkbox</p></section>
+<section id="s9" data-top="General"><h2>Frequently-Asked-Questions-(FAQs)</h2><div class="src">Frequently-Asked-Questions-(FAQs).md</div><h2 id="is-it-possible-to-hard-reset-a-dexcom-g6-transmitter"><a name="extend-transmitter-life">Is it possible to "hard reset" a Dexcom G6 transmitter?</a></h2>
+<p>With an 80xxxx or an 81xxxx transmitter, a "hard reset" or life extension is sometimes <a href="https://androidaps.readthedocs.io/en/latest/EN/Configuration/xdrip.html#extend-transmitter-life">possible</a>; but those old transmitters need a new battery first, of course. It is not possible to "hard reset" 8G, 8H, 8J, 8K or newer transmitters.</p>
+<h2 id="why-does-the-calibration-graph-show-nothing-is-empty">Why does the calibration graph show nothing (is empty)?</h2>
+<p>The horizontal axis of the calibration graph represents raw values. The vertical axis represent what xDrip considers to be the corresponding blood glucose for each raw value defined by the line shown on the graph. No G6 transmitter after 81XXXX sends raw values. Hence, xDrip cannot show anything on the calibration graph because xDrip has no access to the raw values.</p></section>
+<section id="s10" data-top="General"><h2>Grafana-Notes</h2><div class="src">Grafana-Notes.md</div><h1 id="influxdb-grafana-dashboard">InfluxDB Grafana Dashboard</h1>
+<p><strong>InfluxDB support and the example Grafana diabetes dashboard was suggested and developed by: Julius de Bruijn (pimeys)</strong></p>
+<blockquote>
+<p>If you're able to write data to InfluxDB and have the latest Grafana communicating with the database, here's the dashboard[0] I've been able to build with the current data. To see all the panels you need Grafana 4.1, InfluxDB 1.x and the Grafana histogram[1] plugin. I have the glucose graph with alerts outside my target levels, a delta graph which is handy for seeing the current trend, a histogram to see how the different values are spread throughout the timespan and the current estimated GHbA1c.</p>
+<p>The dashboard needs some settings tweaks to work outside my own setup, but should be easy enough. The default retention policy[2] in InfluxDB is 7 days until it starts to delete old data. You might want to change it before losing anything important.</p>
+<p>Remember, if you run this on a public server, https+basic auth+fail2ban to block everybody failing to authenticate. I wouldn't trust the security of InfluxDB alone, usually it's not run on a public server.</p>
+<p>You can use mg/dl. The uploader sends both values, just select the value you want in the panel editor or edit the json.</p>
+</blockquote>
+<p>[0] https://gist.github.com/pimeys/e3a99763aea756f8712abd5dbe19ebdf</p>
+<p>[1] https://grafana.net/plugins/mtanda-histogram-panel</p>
+<p>[2] https://docs.influxdata.com/influxdb/v1.2/guides/downsampling_and_retention/</p>
+<p><em>Still todo: Convert the panel to mg/dl and provide both or a switchable one</em></p></section>
+<section id="s11" data-top="General"><h2>Guide-for-using-OB1-G5-Internal-Algorithm-Feature</h2><div class="src">Guide-for-using-OB1-G5-Internal-Algorithm-Feature.md</div><p>This feature uses the internal algorithm of the G5 Transmitter to calculate glucose values instead of using one of xDrip's calibration algorithms.</p>
+<p>This is a new experimental feature which will likely be expanded over time. Because it is a little confusing to use at the moment this mini-guide is designed to help!</p>
+<h3 id="why-would-i-want-to-do-this">Why would I want to do this?</h3>
+<p>Using the native G5 transmitter to calculate the glucose values should mean that these are as close to the official algorithm results as possible. There is however no guarantee that this feature has been implemented correctly so please observe caution and care.</p>
+<p>Back-filling is also a feature of using the native G5 for calculations. You should find that xDrip will back-fill missing values up to 3 hours when returning from being out of range etc.</p>
+<h3 id="you-can-use-this-feature-if-all-of-the-following-are-true">You can use this feature if all of the following are true:</h3>
+<ul>
+<li>[x] You are using your phone as a collector</li>
+<li>[x] Your phone works with the G5 OB1 Collector enabled</li>
+<li>[x] You are using a version from the 16th April 2018 onward.</li>
+<li>[x] Your G5 Transmitter days shows as less than 90</li>
+<li>[x] You are prepared for some possible confusion!</li>
+<li>[x] You are prepared for a 2 hour warm up period where you may have no glucose data.</li>
+</ul>
+<p>If you are already also using the official receiver then you should be able to enable this feature simply by enabling the <code>G5 Debug Setting</code> called <code>G5 Internal Algorithm</code></p>
+<p>If you are not already using an official receiver device or similar then you will need to first activate the setting mentioned above and then go through the <code>Start Sensor</code> procedure. Without this the G5 Transmitter will not perform any calculations and xDrip will fall back to its default mechanism.</p>
+<p>If you already have a sensor started then select <code>Stop Sensor</code> then select <code>Start Sensor</code> and enter in as close to as possible when the sensor was started. Beware that if you are doing this when not actually changing a sensor then this can probably introduce some inaccuracies because the G5 Transmitter is expecting you to only start a sensor when one has just been inserted.</p>
+<p>After you have done this when the G5 next wakes up (5 minutes later..) it will report the <code>Sensor Status</code> which you can see in the <code>OB1 G5 System Status</code> tab. It should say <code>Warming Up</code></p>
+<p>After 2 hours this will change to <code>Calibration Requested</code> and you should receive a notification pop-up on your phone which when you tap it will ask you for two initial calibration blood test values. Enter these and then in the <code>G5 Status</code> page you should see <code>G5 Algorithm: Data Received</code> if you see that then it is working!</p>
+<h3 id="known-limitations">Known limitations</h3>
+<p>G5 Firmware version 1.0.0.17 (very old) doesn't support back-filling so if you are using a transmitter with that firmware or older then the back-filling feature will not work.</p>
+<h3 id="things-to-watch-out-for">Things to watch out for:</h3>
+<p>xDrip will try to use its own algorithm if it isn't getting any glucose numbers from the G5 Transmitter. This means it may also ask you to calibrate before the G5 Transmitter has gone through the warm-up process. So you will start getting numbers that are still from the xDrip algorithm and then get asked again for a double calibration at which point numbers after that will be coming from the G5 Transmitter itself. This is a source of confusion which is likely to get handled better in the future but due to the early experimental state of this feature this hasn't been handled properly yet.</p>
+<p>The same thing could happen in reverse if the G5 Transmitter stops producing glucose values. The only way to tell is to look in the <code>G5 Status</code> tab to find out what is going on. Sensor States other than OK will be displayed in orange at the top of that page.</p>
+<h3 id="how-to-turn-it-off">How to turn it off</h3>
+<p>At any point you should be able to uncheck the <code>G5 Internal Algorithm</code> preference item and things will return to the typical xDrip+ behavior.</p>
+<h3 id="how-to-provide-debugging-information">How to provide debugging information</h3>
+<p>Before you collect any log information to assist debugging, if things don't work properly. You should follow the instructions here to enable mega logging for the OB1 Collector.</p>
+<p>https://github.com/NightscoutFoundation/xDrip/wiki/Enabling-Debugging-for-OB1-collector</p></section>
+<section id="s12" data-top="General"><h2>Home</h2><div class="src">Home.md</div><p>The documentation of this project can be found in the documentation folder: https://github.com/NightscoutFoundation/xDrip/tree/master/Documentation</p>
+<p>There is some information about specific topics also in this wiki - see the side bar.</p>
+<p>For information relating to using Blucon devices another wiki site has some additional information which will eventually get merged in to the documentation: https://github.com/gregorybel/xDrip-plus/wiki/How-to-use-Blukon-with-xdrip</p></section>
+<section id="s13" data-top="General"><h2>How-to-get-the-Nightlies-on-Automatic-Update</h2><div class="src">How-to-get-the-Nightlies-on-Automatic-Update.md</div><p>If you wish to receive automatic updates from the Nightly release channel then this is what you need to do:</p>
+<p>Go in to <code>Settings</code> -&gt; <code>xDrip+ Update Settings</code> and click on the <code>Update Channel</code> section. </p>
+<p>If you see <code>Nightly</code> in the list then select it and you are done.</p>
+<p>If you don't see <code>Nightly</code> then select <code>Alpha</code> and then return to the xDrip home screen and then go in to <code>Settings</code> -&gt; <code>xDrip+ Update Settings</code> again and this time <code>Nightly</code> should be visible.</p>
+<p>Beware that the <code>Nightly</code> update channel contains the newest and least well tested versions of the software. It is the first channel to receive new features but also where bugs are often uncovered.</p>
+<p>We are extremely grateful to all our <code>Nightly</code> channel testers.</p>
+<p>You can use the 3 dot menu <code>Check for Update</code> at any time to check for an update immediately. Otherwise checks will occur roughly ever 24 hours.</p></section>
+<section id="s14" data-top="General"><h2>What is this?</h2><div class="src">How-to-use-the-Wahoo-Elemnt-Bolt-cycle-computer-as-a-collection-device.md</div><h1 id="what-is-this">What is this?</h1>
+<h4 id="there-is-support-in-recent-firmware-for-the-elemnt-bolt-cycle-computer-to-allow-it-to-be-configured-as-an-xdrip-collector">There is support in recent firmware for the Elemnt Bolt cycle computer to allow it to be configured as an xDrip+ collector.</h4>
+<p>The idea is that you can use the cycle computer while riding and see the numbers on the screen of the cycle computer without needing to have your phone with you.</p>
+<p>This has been tested with the G6 only. It may also work with the G5. The "Elemnt Bolt" device has been confirmed as working. Firmware update for the "Elemnt" model should be coming soon but is not available at the time of writing.</p>
+<p>This is designed to work in conjunction with your phone. So you use your phone and/or the cycle computer as a collector. If you also use the official hardware receiver or a pump with your G5/G6 then you will need to follow the special instructions to get it working and in that case the Wahoo device takes the place of your phone. </p>
+<p>The G5/G6 can only work with two different receiving devices at the same time. If you try to use more than two or try to coexist the same slot on the transmitter with two receivers then it will likely stop reception on both of them. </p>
+<p>The feature once activated is not configurable in the Wahoo companion app. The numbers simply will be displayed on the screen as a fixed data box. Records from collection will also be exported in the .Fit file. They are not synced back to xDrip phone app.</p>
+<h1 id="how-to-configure-it">How to configure it</h1>
+<p>1) Make sure you are running a recent version of xDrip+ (Nightly recommended)<br />
+2) Make sure your Elemnt Bolt is updated to the latest released firmware<br />
+3) Check out this instructional video: https://www.youtube.com/watch?v=1VoZAgXCQcM</p>
+<h1 id="how-to-turn-it-off-again">How to turn it off again</h1>
+<p>1) Set your collector to disabled in the xDrip phone app and then repeat the usb configuration process described above. This will set the collector to disabled on the Wahoo device.</p>
+<h1 id="how-to-run-the-wahoo-in-the-phone-slot">How to run the Wahoo in the phone slot</h1>
+<p>This allows the Wahoo device to occupy the "phone" slot of the G5/G6 so that you can use the Wahoo and another device like a G5/G6 enabled pump. In this mode you better make sure your phone is switched off or out of range or has the xDrip collector disabled whenever your Wahoo device is on or they will conflict.</p>
+<p>The method for enabling this is a bit complex as it is actually designed for something else within xDrip, but follow these instructions and it will work:</p>
+<p>Within xDrip, select the top left burger menu -&gt; Settings -&gt; Smart Watch Features -&gt; Android Wear Integration </p>
+<p>On this page the option you need has its control disabled, to enable it, flip the Android Wear Integration switch to On and then enable both "Enable Wear Collection Service" and "Force Wear Collection Service" </p>
+<p>At this point you can enable the option you need which is lower down the page "Only use Wear" -&gt; Enabled </p>
+<p>Once you have that enabled, then uncheck "Enable Wear Collection Service" and then flip the top "Android Wear Integration" switch back off. </p>
+<p>Now when you use the usb configuration feature it will write the setting:  "onlyEverUseWearCollector": true, in to the configuration. </p>
+<p>To revert this setting if it is not needed (Eg they are using phone + bolt as receivers) - To do that you follow the same sequence except you uncheck the "Only use Wear" option. </p></section>
+<section id="s15" data-top="General"><h2>Integration with xDrip+ via Broadcast Intent</h2><div class="src">Incoming_Glucose_Broadcast.md</div><h1 id="integration-with-xdrip-via-broadcast-intent">Integration with xDrip+ via Broadcast Intent</h1>
+<h2 id="overview">Overview</h2>
+<p>This documentation provides guidance on how to send a broadcast intent from a third-party Android application to insert a glucose sensor record into the xDrip application. There are a few different broadcast receivers but this documents the Nightscout Emulation receiver just for glucose records.</p>
+<h2 id="sending-a-broadcast-intent">Sending a Broadcast Intent</h2>
+<p>To insert a glucose sensor record into xDrip, construct and send a broadcast intent with specific parameters as described below.</p>
+<h3 id="intent-action">Intent Action</h3>
+<p>Use the following intent action when constructing the intent:</p>
+<pre><code class="language-java">Intent intent = new Intent(&quot;com.eveningoutpost.dexdrip.NS_EMULATOR&quot;);
+</code></pre>
+<h3 id="intent-package">Intent Package</h3>
+<p>To ensure the intent is received only by xDrip and to be allowed on Android 8+, specify the package name:</p>
+<pre><code class="language-java">intent.setPackage(&quot;com.eveningoutpost.dexdrip&quot;);
+</code></pre>
+<h3 id="extra-parameters">Extra Parameters</h3>
+<p>Add extra parameters to the intent for the data collection and JSON payload containing the sensor readings.</p>
+<ul>
+<li>Collection: Indicate the type of data collection using the key <code>"collection"</code> with the value <code>"entries"</code>.</li>
+<li>Data: Provide the glucose sensor readings in a JSON array format with the key <code>"data"</code>.</li>
+</ul>
+<h3 id="json-payload-structure">JSON Payload Structure</h3>
+<p>Construct the JSON payload with the glucose sensor readings as follows:<br />
+- Each reading should be a JSON object with the following attributes:<br />
+    - <code>"type"</code>: Set to <code>"sgv"</code> for sensor glucose value record.<br />
+    - <code>"date"</code>: The timestamp of the reading in milliseconds since epoch.<br />
+    - <code>"sgv"</code>: The glucose value in mg/dL.<br />
+    - <code>"direction"</code>: The rate of change of the glucose value, represented by a string such as <code>"SingleUp"</code>. Refer to <code>BgReading.slopeFromName()</code> for possible values.</p>
+<p>Here is an example JSON payload with a single reading:</p>
+<pre><code class="language-java">final JSONArray sgv_array = new JSONArray();
+final JSONObject sgv_object = new JSONObject();
+sgv_object.put(&quot;type&quot;, &quot;sgv&quot;);
+sgv_object.put(&quot;date&quot;, 1526817691000.0);
+sgv_object.put(&quot;sgv&quot;, 158);
+sgv_object.put(&quot;direction&quot;, &quot;SingleUp&quot;);
+sgv_array.put(sgv_object);
+intent.putExtra(&quot;data&quot;, sgv_array.toString());
+</code></pre>
+<p>A code example of this is in the unit test source tree in <code>NSEmulatorReceiverTest.bgReadingExampleBroadcast()</code></p>
+<h3 id="sending-the-intent">Sending the Intent</h3>
+<p>After constructing the intent, use <code>sendBroadcast()</code> to send it:</p>
+<pre><code class="language-java">context.sendBroadcast(intent);
+</code></pre>
+<h2 id="testing-the-integration">Testing the Integration</h2>
+<p>For testing purposes, make sure you set xDrip <code>Hardware Data Source</code> to <code>640G / Eversense</code> to enable the receiver.</p></section>
+<section id="s16" data-top="General"><h2>InPen-experimental-feature</h2><div class="src">InPen-experimental-feature.md</div><h3 id="xdrip-has-experimental-support-for-the-very-nice-inpen-insulin-pen">xDrip has experimental support for the very nice InPen insulin pen.</h3>
+<p>This is a bluetooth enabled half-unit insulin pen with a form factor pretty much identical to a regular insulin pen.</p>
+<p>xDrip can automatically sync with this in the background and add treatments to the graph. What we have been able to do with pump data can now be possible for pen users.</p>
+<p>Because of the various bluetooth issues on different handsets, the real-world performance of this may vary, but it should be at least as good as the existing support for Bluetooth glucose meters.</p>
+<p>There are different models of this Pen. The one I had for testing will only work with Android 6.</p>
+<h2 id="understanding-how-priming-doses-are-interpreted">Understanding how Priming doses are interpreted</h2>
+<p>Many pen users will change the pen tip and eject a priming dose in to the air before dialing up the actual dose. To use the pen with xDrip, your priming dose must always be the same amount of units. By default this is set to <code>2.0U</code> and must occur within a number of minutes of the real dose to be considered a priming dose (which are not used as a treatment entries by xDrip) - By default the timeout is set to <code>2 minutes</code>.</p>
+<p>If you sometimes do not prime your pen then you can uncheck the <code>Ignore Orphan Primes</code> setting so that a dose that matches your priming units (which is not followed immediately by another dose) will be treated as an actual dose.</p>
+<p>Before doing anything else in the settings, make sure to set your priming doses up properly. xDrip will sync data from the last 3 days, so if you already have doses recorded on the pen before you understood about the priming settings then these could easily end up confusing xDrip.</p>
+<h2 id="how-to-pair">How to pair</h2>
+<p>Unless you have already paired the pen with your phone or if you have moved the pen between phones, it will need to go through the pairing process.</p>
+<p>When pairing, the last reading on the pen must be a priming dose and the pen will only remain awake for some seconds after each time a dose is delivered. So, dial up the number of units you use would for priming <code>2.0U</code> by default. Then enable the <code>InPen Support</code> slider, or if it is already enabled tap the <code>Find New Pen</code> section on the settings page. As soon as you have done that then press on the pen top to deliver the priming dose in to the air.</p>
+<p>Now return to the xDrip home screen and use the <code>System Status</code> menu item and view the <code>InPen</code> tab to get an idea of what is happening. This page updates in real-time.</p>
+<p>If things go well then you should hear a beep noise and see data in the <code>Last record</code> status section. If it doesn't work the first time try again with the same process. If you get stuck please contact me.</p>
+<p>If you have a large number of doses already recorded on the pen then it may take some time to sync all these. After you have heard a beep indicating new data. Wait several minutes (or however long your priming timeout is set to) and then dial up another priming dose and deliver that in to the air which will cause the pen to wake up and more records will get synced. If this situation causes a problem, please get in touch.</p></section>
+<section id="s17" data-top="General"><h2>Kotlin_Policy</h2><div class="src">Kotlin_Policy.md</div><h3 id="kotlin-policy">Kotlin Policy</h3>
+<p>xDrip supports both Java and Kotlin source files.</p>
+<p>New class files in Java or Kotlin are accepted but there is no intention to convert existing Java files to Kotlin.</p>
+<p>Kotlin classes should be mindful to maintain as much java compatibility as possible where they may need to interact with existing classes.</p>
+<p>Overhead in terms of additional libraries and any performance related issues (such as threading and component lifecycle) should be carefully monitored.</p></section>
+<section id="s18" data-top="General"><h2>If you have a lot of missed readings:</h2><div class="src">libre-fix-bt-connection-issues.md</div><h1 id="if-you-have-a-lot-of-missed-readings">If you have a lot of missed readings:</h1>
+<p>You can try other settings:<br />
+* Solution 0:<br />
+  * Make sure xDrip is not being killed by OS<br />
+   * set xDrip into the "ignored battery optimization" list<br />
+   * If you use a Huawei phone:<br />
+     * lock app<br />
+     * allow xDrip to be launched at start<br />
+* Solution 1:<br />
+  * <code>Trust Auto Connect</code> to ON<br />
+  * <code>close GATT on disconnect</code> to OFF<br />
+* Solution 2:<br />
+  * <code>Trust Auto Connect</code> to OFF<br />
+  * <code>close GATT on disconnect</code> to ON (only if Trust Auto connect is OFF)<br />
+* Solution 3:<br />
+  * Enable or disable <code>Use scanning</code><br />
+* Solution 4:<br />
+  * Enable or disable <code>Always discover services</code></p>
+<h1 id="on-each-try-make-sure-to">On each try, make sure to:</h1>
+<ul>
+<li>reset your device</li>
+<li>reboot phone</li>
+<li>use the latest xDrip app</li>
+</ul>
+<h1 id="provide-more-info-so-that-we-can-support-you">Provide more info so that we can support you:</h1>
+<ul>
+<li>solution 1:</li>
+<li>Enable engineering mode<ul>
+<li>Look here: https://github.com/NightscoutFoundation/xDrip/wiki/Engineering-Mode</li>
+</ul>
+</li>
+<li>Make a screenshot from system status / BT devices</li>
+<li>solution 2:</li>
+<li>Enable more logs:<ul>
+<li><code>Settings -&gt; less common settings -&gt; Extra logging settings -&gt; Extra tags for logging</code> and add:</li>
+<li>DexCollectionService:v</li>
+</ul>
+</li>
+<li>Reproduce issue</li>
+<li>Send logs from within the App</li>
+<li>Click 3 points on main screen</li>
+<li><code>View event logs</code></li>
+<li><code>Upload logs</code></li>
+</ul></section>
+<section id="s19" data-top="General"><h2>Local Web Services</h2><div class="src">Local_Web_Services.md</div><h1 id="local-web-services">Local Web Services</h1>
+<p>xDrip+ has the facility to operate a local web server. This feature is enabled within the Inter-App settings menu.</p>
+<p>A web server will respond to requests on address <code>127.0.0.1</code> port <code>17580</code></p>
+<h3 id="nightscout-pebble-endpoint">Nightscout Pebble endpoint</h3>
+<p><code>/pebble</code> emulates the same URL on Nightscout, so with a watchface which supports this you can enter the address on the watchface, for example, Set the data endpoint on Pebble Nightscout watchface to:</p>
+<pre><code>http://127.0.0.1:17580/pebble
+</code></pre>
+<h3 id="sgvjson-endpoint">sgv.json endpoint</h3>
+<p><code>/sgv.json</code> emulates <code>/api/v1/entries/sgv.json?count=24</code> on Nightscout</p>
+<pre><code>http://127.0.0.1:17580/sgv.json
+</code></pre>
+<p>The first record will contain a hint as to the units being used, <code>units_hint</code> will be <code>mgdl</code> or <code>mmol</code> to indicate the user's preference but the values will always be sent as mgdl</p>
+<p>You can also access the steps endpoint by appending a query parameter</p>
+<pre><code>http://127.0.0.1:17580/sgv.json?steps=1234
+</code></pre>
+<p>When doing this look for <code>steps_result</code> number in the first record of the json reply, 200 indicates success, anything else failure to set the steps value. Steps value should be the current cummulative step counter from the device.</p>
+<p>You can also access the heart endpoint by appending a query parameter</p>
+<pre><code>http://127.0.0.1:17580/sgv.json?heart=123
+</code></pre>
+<p>When doing this look for <code>heart_result</code> number in the first record of the json reply, 200 indicates success, anything else failure to set the heart bpm value. Heart value should be the current bpm now from the device.</p>
+<p>You can combine both like a normal query string:</p>
+<pre><code>http://127.0.0.1:17580/sgv.json?steps=1234&amp;heart=123
+</code></pre>
+<p>There is another option <code>brief_mode=Y</code> which you can use to exclude some of the data fields from the results to reduce response size.</p>
+<p>There is another option <code>no_empty=Y</code> which you can use so that an empty data set returns <code>""</code> instead of <code>"[]"</code></p>
+<p>There is another option <code>all_data=Y</code> which you can use to get data additionally from the previous sensor session.</p>
+<p>There is another option <code>sensor=Y</code> which you can use to get data about sensor age</p>
+<p>There is another option <code>collector=Y</code> which you can use to get alert messages from the collector. Nothing will be returned if the message is empty.</p>
+<p>You can also access the tasker endpoint by appending a query parameter</p>
+<pre><code>http://127.0.0.1:17580/sgv.json?tasker=osnooze
+</code></pre>
+<p>look for <code>tasker_result</code> in the first line of the json reply to indicate success or failure.</p>
+<p><code>OSNOOZE</code> is opportunistic snooze which you can call even when there is no alert playing</p>
+<p><code>SNOOZE</code> is the traditional tasker snooze which will send snooze to followers and uses more cpu</p>
+<h3 id="statusjson-endpoint">status.json endpoint</h3>
+<p>This implements a small subset of the data you might receive from Nightscouts status.json</p>
+<pre><code>http://127.0.0.1:17580/status.json
+</code></pre>
+<p>Results look like:</p>
+<pre><code>{"thresholds":{"bgHigh":9.4,"bgLow":3.9}}
+</code></pre>
+<p>High and low marks set within the app represented in the local units.</p>
+<h3 id="tasker-endpoint">Tasker endpoint</h3>
+<p>The <code>/tasker</code> endpoint lets you push requests to the tasker interface via http. So a watch face which can only support web based endpoints (eg FitBit) could send a snooze request as below:</p>
+<pre><code>http://127.0.0.1:17580/tasker/SNOOZE
+</code></pre>
+<h3 id="steps-endpoint">Steps endpoint</h3>
+<p><code>/steps</code> allows for setting the current step counter data</p>
+<pre><code>http://127.0.0.1:17580/steps/set/1234
+</code></pre>
+<p>This should be the current cumulative step counter on the device measuring steps. Not a historical record.</p>
+<h3 id="heart-endpoint">Heart endpoint</h3>
+<p><code>/heart</code> allows for setting the current heart rate bpm data</p>
+<pre><code>http://127.0.0.1:17580/heart/set/123/1
+</code></pre>
+<p>This should be the current cumulative rate bpm on the device measuring. Not a historical record. The first parameter is BPM and the second is accuracy. If unsure of accuracy parameter just set to 1.</p>
+<hr />
+<h4 id="ssl-option">SSL option</h4>
+<p>The service also listens on port <code>17581</code> for https protocol connections. The certificate presented is self-signed for <code>127.0.0.1</code><br />
+In its current implementation I wouldn't expect this to be that useful.</p>
+<hr />
+<h3 id="open-option">Open option</h3>
+<p>The service has an <code>Open Web Service</code> option. If this is enabled then connections can be made through any network interface instead of being restricted to the loopback on-device network only. Typically enabling this option exposes the wifi / lan / bluetooth pan connection of the device although it is possible that it could be exposed via cellular as well if the carrier supports public ip addressing.</p>
+<p>Be very careful enabling this option as there are powerful features accessible, for example the tasker interface. It is best used in conjunction with the Authentication option described below.</p>
+<hr />
+<h3 id="authentication">Authentication</h3>
+<p>If the <code>xDrip Web Service Secret</code> is set to anything other than an empty string (the default) then requests coming in via the open non-loopback networks will have to supply a http header <code>api-secret</code> which contains the SHA1 hash of the same secret password or their connection will be rejected. Rejection information is stored in the Event Log and returned via the http response. The result code 403 (forbidden) is set when a connection is rejected.</p>
+<p>Additionally, if a client supplies the <code>api-secret</code> header, then even if the xDrip secret is not set then the request will be rejected. This feature is so that client devices can be assured they are connecting to the correct xDrip instance (by using different secrets). This could be significant when looping for example.</p>
+<p>Authentication is not required on the loopback local network interface (127.0.0.1)</p>
+<pre><code>api-secret: 915858afa2278f25527f192038108346164b47f2
+</code></pre>
+<p>Above shows http header for password <code>Abc</code></p>
+<hr />
+<h4 id="implementation">Implementation</h4>
+<p>Code relating to this feature is in the <code>webservices</code> package folder</p></section>
+<section id="s20" data-top="General"><h2>Patching-Android-Wear-devices-for-use-with-the-G5</h2><div class="src">Patching-Android-Wear-devices-for-use-with-the-G5.md</div><p>There are some bugs present on most Android Wear smartwatches which prevent them working correctly with the G5.</p>
+<p>The only way we could find to fix this problem was to modify the rom of the watch itself. Each watch seen so far requires slightly different handling and so individual guides and packages have been produced to perform the task for each type of smartwatch.</p>
+<p>The procedure involves unlocking the bootloader of the watch and applying a patch to the firmware/rom using a custom recovery app. <strong>This isn't trivial and will almost certainly invalidate the watch manufacturer's warranty, but it appears to solve the problem well.</strong> </p>
+<p>To make the process as easy as possible, all of the required files and a <strong>PDF guide</strong> are bundled together in a zip file called a "care pack"</p>
+<p>Watches supported so far, click to download the care pack:</p>
+<ul>
+<li><a href="https://drive.google.com/open?id=1Gk_Fbi98AkjLmSBTmVJ7_pq9dy7xF7Ld">Asus Zenwatch 2 (models WI501Q &amp; WI502Q) care pack ZIP download</a></li>
+<li><a href="https://drive.google.com/open?id=1SjIUQ5A6Gsa6dHOxjFF09vzOS8UCA0-T">Asus Zenwatch 3 (model WI503Q) care pack ZIP download</a></li>
+<li><a href="https://drive.google.com/open?id=1zYUDeJr2Xp__aZhQwVzTK6fbwTH8ErgT">Huawei Watch care pack ZIP download</a></li>
+<li><a href="https://drive.google.com/open?id=1z2ovSF66V_k7H49Wi_VHuBqPi0_2xpwk">LG G Watch (model W100) care pack ZIP download</a></li>
+<li><a href="https://drive.google.com/open?id=1kuwtUWlqOfn41o3ArFU4V4SMlg5WfmUd">Polar M600 Nougat 7.1 watch care pack ZIP download</a></li>
+<li><a href="https://drive.google.com/open?id=15Rk9sXvYMlGHRTknR6NlvNdx73uuDsBg">Polar M600 Oreo 8.0 watch care pack ZIP download</a></li>
+<li><a href="https://drive.google.com/open?id=1vls9Vh1tRqAwSpqcHG71EvWhfuooDhn3">Huawei Watch 2 care pack ZIP download</a></li>
+</ul>
+<p>After patching you probably should uninstall / reinstall the xDrip wear watch face to ensure it can fully take advantage of demigod mode.</p>
+<p>Any problems, first try rebooting the watch then use the Disconnect/Reset system menu option to reset the watch if that doesn't correct it.</p>
+<p>If you get prompted for a manufacturer upgrade and install it then it will undo the patches and there is unlikely to be a patch for the newly upgraded version. If the pop-up is annoying, please contact jamorham and I can find a way to disable it for you.</p>
+<hr />
+<p><a href="https://gist.github.com/jamorham/8f57dcf0821e0327e22fbe7041bd738f"><em>patch technical information</em></a></p></section>
+<section id="s21" data-top="General"><h2>Phones which have achieved high capture rate</h2><div class="src">Phones_For_G5.md</div><h1 id="phones-which-have-achieved-high-capture-rate">Phones which have achieved high capture rate</h1>
+<h2 id="this-file-is-for-archive-purposes-only-now-it-is-believed-that-almost-all-phones-work-correctly-once-any-specific-manufacturer-power-saving-features-are-disabled-for-xdrip">THIS FILE IS FOR ARCHIVE PURPOSES ONLY NOW - IT IS BELIEVED THAT ALMOST ALL PHONES WORK CORRECTLY ONCE ANY SPECIFIC MANUFACTURER POWER SAVING FEATURES ARE DISABLED FOR XDRIP</h2>
+<p>The following phone models have reported getting a capture rate of 90%-100%</p>
+<p>In theory, using the same phone with the same Android version should allow you to also potentially achieve the same high capture rate. This is a guide only, it may or may not work for you. There are no guarantees.</p>
+<table>
+<thead>
+<tr>
+<th>Phone Model</th>
+<th>Android Version</th>
+<th>Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Google Pixel 2</td>
+<td>9</td>
+<td></td>
+</tr>
+<tr>
+<td>Google Pixel 2XL</td>
+<td>9</td>
+<td></td>
+</tr>
+<tr>
+<td>Google Pixel</td>
+<td>7.1.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Google Pixel</td>
+<td>7.1.2</td>
+<td></td>
+</tr>
+<tr>
+<td>Google Pixel XL</td>
+<td>7.1.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Google Pixel XL</td>
+<td>7.1.2</td>
+<td></td>
+</tr>
+<tr>
+<td>OnePlus A3003</td>
+<td>7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>OnePlus A0001</td>
+<td>6.0.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Samsung Galaxy S4 (SCH-I545)</td>
+<td>5.0.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Samsung Galaxy S5 (SM-G900V)</td>
+<td>6.0.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Samsung Galaxy Note 5 (N920V)</td>
+<td>7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Samsung Galaxy S6 (G920V)</td>
+<td>6.0.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Samsung Galaxy S7 (SM-G930P)</td>
+<td>7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Samsung Galaxy S7 (SM-G930V)</td>
+<td>7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Samsung Galaxy S7 (SM-G930W8)</td>
+<td>6.0.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Samsung Galaxy S7 edge (SM-G935V)</td>
+<td>7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Samsung Galaxy S7 edge (G935T)</td>
+<td>7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Samsung Galaxy Express Prime (SM-J320A)</td>
+<td>6.0.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Essential Phone PH-1</td>
+<td>7.1.1</td>
+<td></td>
+</tr>
+<tr>
+<td>HTC 10</td>
+<td>7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Lenovo Moto G4</td>
+<td>7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Nexus 5</td>
+<td>6.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Nexus 5X</td>
+<td>7.1.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Nexus 5X</td>
+<td>7.1.2</td>
+<td></td>
+</tr>
+<tr>
+<td>Nexus 6</td>
+<td>7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Nexus 6P</td>
+<td>7.1.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Nexus 6P</td>
+<td>7.1.2</td>
+<td></td>
+</tr>
+<tr>
+<td>LG V20 (LG-H918)</td>
+<td>7.0</td>
+<td></td>
+</tr>
+<tr>
+<td>LG G4 (VS986 &amp; H811)</td>
+<td>6.0</td>
+<td></td>
+</tr>
+<tr>
+<td>LeEco Le Pro3 (LEX727)</td>
+<td>6.0.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Motorola Moto E (2nd Gen) (XT1526)</td>
+<td>5.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Motorola G3</td>
+<td>6.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Blu R1 HD</td>
+<td>6.0</td>
+<td></td>
+</tr>
+<tr>
+<td>Sony Xperia Z3 Compact (D5803)</td>
+<td>6.0.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Huawei Y6 (SCL-L21)</td>
+<td>5.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Huawei P8 Lite (ALE-L21)</td>
+<td>6.0</td>
+<td></td>
+</tr>
+<tr>
+<td>LG V10c (LG-D415)</td>
+<td>5.0.2</td>
+<td></td>
+</tr>
+<tr>
+<td>Doogee X5 Max Pro</td>
+<td>6.0.1</td>
+<td></td>
+</tr>
+<tr>
+<td>Doogee X5S</td>
+<td>5.1</td>
+<td>OB1</td>
+</tr>
+<tr>
+<td>Melrose S9</td>
+<td>4.4.2</td>
+<td>OB1</td>
+</tr>
+<tr>
+<td>Samsung A3 2017</td>
+<td>6.0.1</td>
+<td>OB1</td>
+</tr>
+<tr>
+<td>ZTE Axon 7 Mini</td>
+<td>7.1.1</td>
+<td>OB1</td>
+</tr>
+<tr>
+<td>ZTE Axon 7</td>
+<td>7.1.2</td>
+<td>OB1</td>
+</tr>
+<tr>
+<td>Xiaomi Mi Mix 2</td>
+<td>Lineage OS 15.1</td>
+<td>OB1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tips">Tips</h2>
+<p>On Doogee / MTK phones disable <code>Intelligent power saving standby</code> in <code>Android Settings</code> -&gt; <code>Battery</code> or you will only receive a reading every 10 minutes.</p>
+<p>Does your phone achieve better than 90% capture rate with G5 but isn't on this list? Please let us know!</p>
+<h1 id="smart-watches-which-have-achieved-high-capture-rate">Smart Watches which have achieved high capture rate</h1>
+<p>An Android Wear watch can also act as a G5 collector. This can be a good way to get around problems with a phone's bluetooth stack without needing to change phones.</p>
+<p>The following watch models have reported getting a capture rate of 90%-100%</p>
+<table>
+<thead>
+<tr>
+<th>Watch Model</th>
+<th>Mode</th>
+<th>Patched</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sony SmartWatch 3</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Asus ZenWatch 2</td>
+<td>OB1</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Asus ZenWatch 3</td>
+<td>OB1</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Huawei Watch</td>
+<td>OB1</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>LG G Watch</td>
+<td>OB1</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Polar M600</td>
+<td>OB1</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>Only the Sony SmartWatch 3 works without patching at the moment. Other listed models require the rom to be patched to work correctly.</p>
+<p>See this page for more details on how to patch: https://github.com/NightscoutFoundation/xDrip/wiki/Patching-Android-Wear-devices-for-use-with-the-G5</p></section>
+<section id="s22" data-top="General"><h2>Quick Start</h2><div class="src">Quick_Start.md</div><h1 id="quick-start">Quick Start</h1>
+<h3 id="currently-recommended-ide">Currently Recommended IDE</h3>
+<p>Android Studio Giraffe | 2022.3.1 Patch 3</p>
+<h3 id="lombok-plugin">Lombok Plugin</h3>
+<p>Until we are using Android Studio Iguana (where the lombok regression is believed to be corrected) you will need to manually install the lombok plugin jar from the etc source tree folder.</p>
+<p>To install it you go to Settings -&gt; Plugins -&gt; Cog icon -&gt; Install plugin from disk -&gt; select the lombok-giraffe.jar file</p>
+<h3 id="android-studio-bugs-and-regressions">Android Studio Bugs and Regressions</h3>
+<p>Be aware that each new version of Android Studio introduces more regressions and bugs. There are still uncorrected bugs which were introduced back in version 3.6! Also each IDE version is tightly coupled with various versions of gradle which are also tightly coupled with various versions of the Android framework tools.</p>
+<p>What this means, is that even though the command line compilation always works fine, any single version of Android Studio is unable to compile the entire xDrip source tree history and is likely to break in misleading and confusing ways based on simple dependency changes as there is such poor support in Android Studio for forward or backwards compatibility.</p>
+<p>Expect to have to run multiple different versions of Android Studio over time or where in the commit history you may be working from and for each new version to potentially introduce new and unpredictable issues. Expect to have to clear cache and restart to avoid being misled about the source of errors.</p></section>
+<section id="s23" data-top="General"><h2>README-xdrip-original</h2><div class="src">README-xdrip-original.md</div><h1 id="xdrip">xDrip</h1>
+<h5 id="please-note-this-is-not-a-product-created-by-or-backed-by-dexcom-you-can-check-them-out-here">** Please note this is <strong>NOT</strong> a product created by or backed by Dexcom, you can check them out <a href="http://dexcom.com/">here</a> **</h5>
+<h4 id="wirelessly-with-a-dexcom-share-receiver-or-wireless-xdrip-bridge-no-receiver">Wirelessly with a Dexcom Share Receiver -- or -- Wireless xDrip bridge (No receiver!)</h4>
+<h4 id="click-here-for-the-main-project-page">Click here for the <a href="http://stephenblackwasalreadytaken.github.io/xDrip/">Main Project Page</a></h4>
+<h4 id="access-your-glucose-levels-from-anywhere">Access your Glucose levels from anywhere!</h4>
+<p>xDrip is ready to upload your glucose data to any <a href="http://nightscout.github.io/">Nightscout</a> server for remote monitoring on just about any internet connected device!!</p>
+<h4 id="want-to-learn-more">Want to learn more??</h4>
+<p>Jump on over to the <a href="https://github.com/StephenBlackWasAlreadyTaken/xDrip/wiki">Wiki</a> for instructions and downloads!!</p>
+<h4 id="stay-up-to-date">Stay Up to Date!</h4>
+<p>Follow me on twitter <code>@StephenIsTaken</code>, I will let everyone know when updates happen that you should definitely download! Updates will be rolling out fairly frequently as there is lots to do!!!</p>
+<h4 id="want-to-help-out">Want to help out?</h4>
+<p>AWESOME, let me know, put up some PRS, lets make it awesome!</p>
+<h4 id="awesome-contributors">Awesome Contributors:</h4>
+<p>(in no particular order, because they are all awesome)<br />
+* <a href="https://github.com/tzachi-dar">@tzachi-dar</a> <br />
+* <a href="https://github.com/jstevensog">@jstevensog</a> <br />
+* <a href="https://github.com/bhandfast">@bhandfast</a> <br />
+* <a href="https://github.com/LorelaiL">@LorelaiL</a><br />
+* <a href="https://github.com/syntaxerr66">@syntaxerr66</a><br />
+* <a href="https://github.com/saercnap">@saercnap</a> <br />
+* <a href="https://github.com/ktind">@ktind</a><br />
+* <a href="http://youtu.be/YuxCUeJ9xAU">Ly</a><br />
+* <a href="http://circles-of-blue.winchcombe.org/">Kev</a><br />
+* <a href="https://github.com/nightscout">NightScout</a><br />
+* Whoever else is supporting this and helping people out!!</p>
+<hr />
+<p><a href="http://i.imgur.com/7b18gLs.jpg"><span class="imgnote">[screenshot omitted — see source]</span></a></p>
+<p><a href="http://imgur.com/lFwKzRr.jpg"><span class="imgnote">[screenshot omitted — see source]</span></a></p>
+<hr /></section>
+<section id="s24" data-top="General"><h2>Using-the-Medtrum-A6</h2><div class="src">Using-the-Medtrum-A6.md</div><h2 id="xdrip-supports-the-medtrum-a6-cgm-since-the-july-23rd-release">xDrip+ supports the Medtrum A6 CGM since the July 23rd release.</h2>
+<p>You can check which version of xDrip you are running by looking in the <code>System Status</code> classic status tab. The easiest way to update to a newer version if yours is too old is to <a href="https://github.com/NightscoutFoundation/xDrip/wiki/How-to-get-the-Nightlies-on-Automatic-Update">enable the Nightlies update channel.</a>  </p>
+<hr />
+<h3 id="steps-to-use-the-a6">Steps to use the A6:</h3>
+<p>If you are using the manufacturer's app then you will likely need to uninstall it or otherwise disable it via Android System Settings to avoid it interfering with them both trying to connect to the Bluetooth of the CGM transmitter.</p>
+<p>To use the A6 with xDrip, you first go in to <code>Settings</code> -&gt; <code>Data Source</code> and select <code>Medtrum A6</code></p>
+<p>Now you need to scan for the transmitter. </p>
+<p>If you are not wearing the transmitter then you should pop it in to the charging dock to wake it up. Now go in to the <code>Bluetooth Scan</code> screen in xDrip and scan until you see the device. It should show you <code>A6</code> and then the serial number of your transmitter. Tap that entry to activate it.</p>
+<p>You can now check in the <code>System Status</code> tab to confirm that xDrip is connecting to the A6 transmitter. You should see various details appear after a few minutes.</p>
+<p>Now within xDrip select <code>Start Sensor</code> and enter the time you started the sensor. If you don't have a sensor already inserted then then you will need to do that first.</p>
+<p>If you have an active sensor already then within a few minutes you should start getting readings based on your previous calibrations. Otherwise you will need to wait the warm-up period and then enter the initial calibration.</p>
+<p>After that you can calibrate the Sensor as normal, either by using the <code>Add Calibration</code> menu item or using the <code>Syringe</code> icon on the top right and entering a finger stick blood test.</p>
+<p>The <code>System Status</code> screen -&gt; <code>Medtrum A6</code> tab is your friend. This should tell you exactly what is happening with the transmitter and sensor at any time.</p>
+<hr />
+<h3 id="what-works">What works:</h3>
+<ul>
+<li>Scanning for the transmitter with serial number display</li>
+<li>Using an already started sensor</li>
+<li>Starting a sensor</li>
+<li>Sending calibrations to the A6 transmitter</li>
+<li>Getting glucose values from the A6 native algorithm</li>
+<li>Using xDrip's calibration algorithms</li>
+<li>Dual plot showing both algorithms</li>
+<li>Back-filling</li>
+<li>Status display</li>
+<li>Standard xDrip integration as a CGM source</li>
+</ul>
+<hr />
+<h3 id="what-doesnt-quite-work">What doesn't quite work:</h3>
+<ul>
+<li>
+<p>Still some question marks over using xDrip's algorithm with the A6 raw data. This does work, but the way the sensor behaves during the first few hours/days is slightly unexpected you may need to frequently re-calibrate during the first few days. Currently it is more advisable to use the A6 native algorithm but we would welcome real-world feedback as to the performance of using xDrip algorithm with the A6. You can instantly switch between either algorithm via the settings.</p>
+</li>
+<li>
+<p>User Interface integration is incomplete when compared to things like G5 where pop-ups will notify of calibration, sensor error states will also be brought to your attention. With the current implementation you must check in <code>System Status</code> -&gt; <code>Medtrum A6</code> tab to find out what might be going on if it isn't working smoothly.</p>
+</li>
+<li>
+<p>Some more finesse may be needed to robust fail safes to ensure the collector never fails. Not enough testing hours have been accumulated yet to know what the edge case failure conditions may be on various handsets etc. Broadly though the A6 appears to be the most reliable of all collectors, in part due to its modern implementation.</p>
+</li>
+</ul>
+<hr />
+<h3 id="future-work">Future work</h3>
+<ul>
+<li>
+<p>The A6 is interesting in that it appears to lend itself particularly well to whole-house-coverage implementations. If there is significant interest in this then I can put something together for it.</p>
+</li>
+<li>
+<p>Once the use of xDrip calibration on the sensor is confirmed as working properly, how does it compare to the native algorithm? Can calibration plugins like Datricsae improve the MARD results?</p>
+</li>
+<li>
+<p>Translation of the various Medtrum related language text strings to the locales where the A6 is available.</p>
+</li>
+</ul>
+<hr />
+<p><em>Thanks to the Nightscout Foundation for assisting with testing hardware for this implementation.</em></p></section>
+<section id="s25" data-top="General"><h2>Choosing a Watch</h2><div class="src">WatchGuide.md</div><h1 id="xdrip-wear-setup-and-troubleshooting-guide">xDrip+ Wear Setup and Troubleshooting Guide</h1>
+<p><strong>Table of Contents</strong><br />
+- <a href="#choosing-a-watch">Choosing a Watch</a><br />
+- <a href="#enable-xdrip-android-wear-integration">Enable xDrip+ Android Wear Integration</a><br />
+    - <a href="#patching-watch-firmware">Patching Watch Firmware</a><br />
+    - <a href="#collector">Collector</a><br />
+        - <a href="#xdrip-system-status">xDrip+ System Status</a><br />
+    - <a href="#initial-wear-enablement-requests-location-permission">Initial Wear Enablement Requests Location Permission</a><br />
+    - <a href="#syncing-phone-and-wear-preferences">Syncing Phone and Wear Preferences</a><br />
+    - <a href="#syncing-bgs-and-wear-database">Syncing BGs and Wear Database</a><br />
+    - <a href="#xdrip-prefs-overview">XDrip Prefs Overview</a><br />
+        - <a href="#xdrip-bt-settings">XDrip BT Settings</a><br />
+        - <a href="#xdrip-watchface-settings">XDrip Watchface Settings</a><br />
+        - <a href="#watchface-tap-feature">Watchface Tap Feature</a><br />
+        - <a href="#battery-usage">Battery Usage</a><br />
+    - <a href="#3-dot-menu">3-Dot Menu</a><br />
+    - <a href="#xdrip-treatments">XDrip Treatments</a><br />
+- <a href="#troubleshooting-xdrip-wear">Troubleshooting xDrip+ Wear</a><br />
+    - <a href="#confirm-collector-runs-on-the-phone-with-wear-integration">Confirm Collector runs on the Phone with Wear Integration</a><br />
+    - <a href="#confirm-collector-runs-on-the-watch-with-wear-integration">Confirm Collector runs on the Watch with Wear Integration</a><br />
+    - <a href="#confirm-the-following-in-android-wear-app-on-phone">Confirm the following in Android Wear app on phone</a><br />
+    - <a href="#confirm-wear-integration-preferences-are-consistent-on-both-phone-and-watch">Confirm Wear Integration preferences are consistent on both phone and watch</a><br />
+    - <a href="#confirm-collection-method-is-consistent-on-both-phone-and-watch">Confirm Collection Method is consistent on both phone and watch</a><br />
+    - <a href="#confirm-collector-device-exists-under-watch-settings-bt-devices">Confirm Collector device exists under Watch Settings-&gt;Bluetooth -&gt; Devices</a><br />
+    - <a href="#confirm-calibration-preferences-are-consistent-on-both-phone-and-watch">Confirm Calibration Preferences are consistent on both phone and watch</a><br />
+    - <a href="#confirm-noise-preferences-are-consistent-on-both-phone-and-watch">Confirm Noise Preferences are consistent on both phone and watch</a><br />
+    - <a href="#confirm-location-permission-is-enabled-in-watch-settings">Confirm Location Permission is enabled in Watch Settings</a><br />
+    - <a href="#debugging-android-wear">Debugging Android Wear</a></p>
+<h1 id="choosing-a-watch">Choosing a Watch</h1>
+<table>
+<thead>
+<tr>
+<th>Watch</th>
+<th>Watch OS?</th>
+<th>Works as collector?</th>
+<th>extra info</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sony Smartwatch 3 (SWR50)</td>
+<td>WearOS 1.6</td>
+<td>Yes: 5 minute intervals</td>
+<td></td>
+</tr>
+<tr>
+<td>Asus Zenwatch 2</td>
+<td>WearOS 2</td>
+<td>Yes: 5 minutes if patched, 10 minutes if not</td>
+<td><a href="https://github.com/NightscoutFoundation/xDrip/wiki/Patching-Android-Wear-devices-for-use-with-the-G5">patch the firmware</a></td>
+</tr>
+<tr>
+<td>Asus Zenwatch 3</td>
+<td>WearOS 2</td>
+<td>Yes: 5 minutes if patched, 10 minutes if not</td>
+<td><a href="https://github.com/NightscoutFoundation/xDrip/wiki/Patching-Android-Wear-devices-for-use-with-the-G5">patch the firmware</a></td>
+</tr>
+<tr>
+<td>Huawei Watch</td>
+<td>WearOS 2</td>
+<td>Yes: 5 minutes if patched, 10 minutes if not</td>
+<td><a href="https://github.com/NightscoutFoundation/xDrip/wiki/Patching-Android-Wear-devices-for-use-with-the-G5">patch the firmware</a></td>
+</tr>
+<tr>
+<td>Huawei Watch 2</td>
+<td>WearOS 2</td>
+<td>Yes: 5 minutes if patched, 10 minutes if not</td>
+<td><a href="https://github.com/NightscoutFoundation/xDrip/wiki/Patching-Android-Wear-devices-for-use-with-the-G5">patch the firmware</a></td>
+</tr>
+<tr>
+<td>LG G Watch</td>
+<td>WearOS 2</td>
+<td>Yes: 5 minutes if patched, 10 minutes if not</td>
+<td><a href="https://github.com/NightscoutFoundation/xDrip/wiki/Patching-Android-Wear-devices-for-use-with-the-G5">patch the firmware</a></td>
+</tr>
+<tr>
+<td>Polar M600</td>
+<td>WearOS 2</td>
+<td>Yes: 5 minutes if patched, 10 minutes if not</td>
+<td><a href="https://github.com/NightscoutFoundation/xDrip/wiki/Patching-Android-Wear-devices-for-use-with-the-G5">patch the firmware</a></td>
+</tr>
+</tbody>
+</table>
+<h1 id="enable-xdrip-android-wear-integration">Enable xDrip+ Android Wear Integration</h1>
+<p>xDrip+ supports wear integration through its wear app.  The xDrip+ wear app is installed with the standard xDrip+ apk. On <strong>Android Wear 1.x</strong> watches, the wear component gets synced automatically to the watch. On <strong>Android Wear 2.0</strong> watches you need to install (activate) the wear component separately from the Play-Store on the <em>watch</em> (under the section "Apps on your phone") after installing xDrip+ on the phone. The latest release supports a standalone mode which allows the wear app to communicate directly with the Bluetooth Collector, whether it is a Dexcom G5, a Dexcom G4 + xBridge, Dexcom Share, or a Libre LimiTTer.</p>
+<p>The wear standalone feature is enabled via the following xDrip+ Settings located under <strong>Smart Watch Features</strong>, and corresponding watch <strong>XDrip Prefs</strong> settings.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<table>
+<thead>
+<tr>
+<th>Phone Settings</th>
+<th>Watch Settings</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Android Wear Integration</td>
+<td>NA</td>
+<td>Enables Wear integration</td>
+</tr>
+<tr>
+<td>Enable Wear Collection Service</td>
+<td>Enable Collector</td>
+<td>Enables the BT Collector to run on the wear device when the smartphone is out-of-range.</td>
+</tr>
+<tr>
+<td>Force Wear Collection Service</td>
+<td>Force Collector</td>
+<td>Forces the BT Collector to run on the wear device even when the smartphone is in-range.</td>
+</tr>
+<tr>
+<td>Disable Force on Low Batterty</td>
+<td>NA</td>
+<td>Disables Force Wear Collection Service on a Wear Low Battery Alert.  Low Battery is determined by Alarms and Alerts -&gt; Extra Alerts (xDrip+) -&gt; <strong>Collector Battery Alerts</strong>.  See section Alerts under <a href="#xdrip-bt-settings">XDrip BT Settings</a> below.</td>
+</tr>
+<tr>
+<td>Disable Force on Missed Readings</td>
+<td>NA</td>
+<td>Disables Force Wear Collection Service on Wear Missed Reading.  When ON, the <strong>Force Wear Collection Service</strong> will be disabled after <strong>Minutes since last Reading from Wear</strong>, returning control back to the smartphone BT Collector.</td>
+</tr>
+<tr>
+<td>Minutes since last Reading from Wear</td>
+<td>NA</td>
+<td>Number of minutes since last BG reading that triggers <strong>Disable Force Wear Collection Service</strong></td>
+</tr>
+<tr>
+<td>Device running Collection Service</td>
+<td>NA</td>
+<td>Read-only; Displays the wear device running the BT Collector.  This will be the watch display name + uuid when Force Wear is enabled.</td>
+</tr>
+<tr>
+<td>NA</td>
+<td>BT Collector</td>
+<td>Read-only; Corresponds to xDrip+ Setting -&gt; <strong>Hardware Data Source</strong>.  For example, if the <strong>Hardware Data Source</strong> is set to <strong>G5 Transmitter (test)</strong>, then the wear app BT Collector will display <strong>DexcomG5</strong>.</td>
+</tr>
+<tr>
+<td>Sync Wear Logs</td>
+<td>NA</td>
+<td>Triggers Wear log entries to be synced to the phone. You can view the logs on your phone using xDrip+ app's upper, right menu item, <strong>View Events Log</strong>. You need to enable ExtraLogTags in xDrip+ Settings -&gt; LCS -&gt; Extra Logging Settings -&gt; <strong>Extra tags for logging</strong> to enable log generation for services s.a. <strong>G5CollectionService:v</strong>.</td>
+</tr>
+<tr>
+<td>Wear Log Prefix</td>
+<td>NA</td>
+<td>The wear event logs are prefixed with the <strong>Wear Log Prefix</strong>.  If you tap it, you'll see that it defaults to <strong>wear</strong> but you can enter something else, or nothing. This prefix helps to distinguish where the log entry was generated since services are similarly named on both devices. For example, <strong>wearG5CollectionService</strong> indicates the log was generated on the wear device.</td>
+</tr>
+</tbody>
+</table>
+<p>These settings are listed in order of dependency.  Note, the Watch's <strong>XDrip BT Settings</strong> will only be visible when Wear Integration is enabled on the phone.</p>
+<ul>
+<li><strong>Enable Wear</strong></li>
+</ul>
+<p>If you ONLY want to use the watch in standalone mode when the phone is out-of-range, then just select the Enable Wear checkbox. This simply enables the BT collection service on the watch to run only when the phone is out-of-range. Upon reconnecting to the phone, the watch will stop its BT collection service and send its BG readings. The phone will sync the received readings and startup its own BT collection service. There may be a delay, perhaps up to 14 minutes, on some smartphones (eg., if the smartphone has poor BT connectivity) to get an initial bg reading after it is switched back to the phone.<br />
+* <strong>Force Wear</strong></p>
+<p>Enabling <strong>Force Wear</strong> will cause xDrip+ to use the watch BT collection service.  The watch BT collection service will sync each bg reading with the phone as readings are received from the collector, or upon reconnecting to the phone.  <strong>Force Wear</strong> for everyday use has the advantage of offloading some of the proccessing required on the smartphone to the watch, thus saving battery and CPU usage on the smartphone.</p>
+<p>However, this offloading means the watch battery may not last as long as when not using Force Wear.  As an example, some users find that the Sony Smartwatch 3 (SW3) can use 20%+ overnight (7-8 hrs) when unplugged and running G5 collector and always-on screen.</p>
+<p>Force Wear may also provide better BT connectivity over that provided by the smartphone.  As an example, some users find that the SW3 provides better BT connectivity than their Samsung Galaxy Note 4 smartphone.</p>
+<h3 id="patching-watch-firmware">Patching Watch Firmware</h3>
+<p>Out of the box, only the Sony SW3 works as a collector with the G5 Transmitter. Most other smart-watches have a bug which prevents their bluetooth working correctly. This bug can be fixed and there are patches available for a number of watch models. See this page for details: https://github.com/NightscoutFoundation/xDrip/wiki/Patching-Android-Wear-devices-for-use-with-the-G5</p>
+<h3 id="collector">Collector</h3>
+<p>The <strong>BT Collector</strong> is a read-only preference on the watch XDrip Prefs.  It corresponds to xDrip+ Setting -&gt; <strong>Hardware Data Source</strong>.</p>
+<p>The following images show the setting of <strong>Hardware Data Source</strong> to <strong>LimiTTer</strong> and its corresponding setting on the watch.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<p>This preference indicates which BT Collector the watch will run to communicate with the BG transmitter when watch is in standalone mode.</p>
+<h4 id="xdrip-system-status">xDrip+ System Status</h4>
+<p>The xDrip+ System Status screen supports individual status pages for the BT Collector.  This enables users to easily identify which device is running the BT Collector.</p>
+<p>The following images show the System Status pages including one for the G5 Collector.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<h3 id="initial-wear-enablement-requests-location-permission">Initial Wear Enablement Requests Location Permission</h3>
+<p>Initial enablement of standalone wear is triggered by selecting the the Enable Wear preference on watch or phone.</p>
+<p>This will trigger the <strong>Location Permission is Required</strong> dialog box to be displayed.  Android Wear requires <strong>Location Access</strong> to be manually accepted by the user, therefore, the user <strong>must</strong> accept the Location Permission query in order for standalone mode to work.  Alternatively, the user can enable Location Permission in Watch -&gt; Settings -&gt; Permissions - XDrip Prefs, then enable Location.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<h3 id="syncing-phone-and-wear-preferences">Syncing Phone and Wear Preferences</h3>
+<p>Note, xDrip+ and Wear will sync their co-existing preferences.  Preference syncing takes the following precedence on connection:</p>
+<ol>
+<li>xDrip+ app startup.  xDrip+ will send its preferences to the watch and the watch will update its values to the phone.</li>
+<li>On re-connect, the wear app will send its preferences to the phone and phone will update its values to the watch.</li>
+</ol>
+<p>For example, if the user changes the Force Wear preference on the watch, it will immediately be sent to the phone upon re-connection, and the phone will update its settings.</p>
+<h3 id="syncing-bgs-and-wear-database">Syncing BGs and Wear Database</h3>
+<ul>
+<li>Sync DB - The watch data (BGs, Logs)are saved in the watch database.  The watch will attempt to sync its data with the phone upon connection until all delta data have been synced. So, for example, if you have 8 hours of overnight data generated while disconnected from the phone, the watch will attempt to send all data upon re-connection with the phone.</li>
+<li>Resetting the Wear DB - The watch data exists on the phone until you:</li>
+</ul>
+<ol>
+<li><strong>Reset Wear DB</strong> on the phone via the xDrip+ upper right menu.  This task deletes the wear database, then initializes it with the most recent calibrations &amp; BGs from the phone.<br />
+  This task may be useful if the wear app is not responding appropriately.  Refer to <a href="#confirm-collector-runs-on-the-watch-with-wear-integration">Confirm Collector runs on the Watch with Wear Integration</a> below.</li>
+<li><strong>Sync Wear DB</strong> is auto-executed on a daily basis at 4 am.  This task will removes all data from the database which have already been synced with the phone.</li>
+<li>The app is uninstalled.</li>
+</ol>
+<ul>
+<li>UserError Table - Similar to the xDrip+ phone app, UserError log messages are saved in the watch UserError table.  To access the watch log entries on the phone, enable the <strong>Sync Wear Logs</strong> preference shown in the above image.  The log entries will be prefixed with the <strong>Wear Log Prefix</strong>, which defaults to <strong>wear</strong>, but is user-configurable.  This allows users to identify which device generated the log entry.  The log entries can be viewed using the follwoing options:</li>
+<li>Users can view log messages on the phone via the xDrip+ upper right menu item, <strong>View Events Log</strong>.</li>
+<li>As with the xDrip+ phone app, specific log entries can be enabled by entering the extra log tag and severity level preference via the xDrip+ phone app settings, Less Common Settings (LCS) - Extra Logging Settings - <strong>Extra tags for logging</strong>.</li>
+</ul>
+<p>The following image shows an example of the phone <strong>View Events Log</strong> containing phone and watch log entries.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<h3 id="xdrip-prefs-overview">XDrip Prefs Overview</h3>
+<p>The watch XDrip Prefs app is used to set the xDrip+ wear app preferences.  In addition to the Wear Integration preferences mentioned above under <a href="#enable-xdrip-android-wear-integration">Enable xDrip+ Android Wear Integration</a>, XDrip Prefs provide the following new preferences used in the standalone version.</p>
+<h4 id="xdrip-bt-settings">XDrip BT Settings</h4>
+<ul>
+<li>
+<p>XDrip G5 Settings</p>
+<p>Wear provides G5 BT settings similar to those provided by the xDrip+ app, such as <strong>Scan for G5 Contantly</strong>, under <strong>G5 Debug Settings</strong>.  As with the xDrip+ app, they should only be enabled if the watch has connectivity issues.</p>
+<p>For example, many users find that the <strong>Sony Smartwatch 3 (SW3)</strong> does not require any of these settings enabled.<br />
+While other SW3 users find enabling <strong>Scan for G5</strong> helpful.</p>
+<p>Some users of the <strong>Moto 360 2nd Gen</strong> watch report the <strong>Unbond G5/Read</strong> pref is required.</p>
+<p>There are the following two, known exceptions:<br />
+- <strong>Force Screen On</strong> - Some watches, such as the <strong>Moto 360 2nd Gen</strong>, fall into deep sleep preventing the BT Collector from retrieving the transmitter data.<br />
+Enabling this preference will trigger the watch to wakeup to read the transmitter data, then fall back to sleep.<br />
+This preference is <strong>experimental</strong> but may be helpful for watches that do not support the <strong>Always-on screen</strong> feature.</p>
+<p>Rather than use this preferences, it is recommended that users enable <strong>Always-on screen</strong> on their watch or Android Wear app, when supported.  The <strong>Moto 360 2nd Gen</strong> is currently the only known watch that does not support <strong>Always-on screen</strong>.</p>
+<p>The following image shows an example of the <strong>Always-on Screen</strong> setting in Android Wear and on the watch settings.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<ul>
+<li><strong>Auth G5/Read</strong> - This should be enabled if using the latest, Dexcom G5 transmitter firmware (released in November 2016, <strong>firmware 1.0.4.10</strong>, or newer than <strong>firmware 1.0.0.17</strong>).</li>
+</ul>
+</li>
+<li>
+<p>Alerts</p>
+<p>Alerts can be enabled on the watch when in standalone mode (i.e., when Force Wear is enabled) by enabling <strong>Enable Alerts</strong> and <strong>High Alerts</strong> on the watch.  This will allow alerts to be triggered when disconnected from the phone.  Currently the following xDrip+ app alerts under <strong>Alarms and Alerts</strong> are supported on the watch:</p>
+<ol>
+<li><strong>Alert List</strong> - All alerts.</li>
+<li><strong>Other Alerts</strong> - <strong>Bg falling fast</strong> and <strong>Bg risng fast</strong>.</li>
+<li><strong>Extra Alerts (xDrip+)</strong></li>
+<li><strong>Persistent High Alert</strong> - configured on watch by enabling <strong>High Alerts</strong>.</li>
+<li><strong>Collector Battery Alerts</strong> - this alert applies to the BT Collector running on phone or watch.<br />
+   If the collector is running on the watch, battery refers to the watch battery for G4 and G5, for other non-G5 BT Collectors, battery refers to those devices communicating with the transmitter.  Battery level is checked upon each transmitter BG reading.</li>
+</ol>
+<p><strong>Glucose Alerts Settings</strong> are currently not configurable for the watch.  Watch alerts use following defaults:</p>
+<pre><code>1. Vibrate-only Profile
+2. Smart Snoozing.
+3. Smart Alerting.
+</code></pre>
+</li>
+</ul>
+<p>The following image shows xDrip+ app alerts under <strong>Alarms and Alerts</strong> which are supported on the watch.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<p>The following images show watch alert preferences and example alerts.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<p>Users will continue to receive those phone alerts which are not supported on the watch.</p>
+<p>Phone and watch alerts can be distinguished by their <strong>Open</strong> dialog.  The phone alert will display <strong>Open on phone</strong>.  Whereas the watch alert will display <strong>Open</strong> dialog.  Upon tapping Open, the Snooze dialog will be displayed on the watch.</p>
+<p>The watch Snooze performs the same functionality that the phone Snooze performs.  Tapping the Snooze button and number from the NumberPicker, on either device, will snooze the alert on both the phone and the watch.  The snoozed active alert will trigger a toast message on the paired device to alert the user of the snooze.</p>
+<p>Note, tapping the other Snooze buttons, such as <strong>Disable All alerts</strong> will only snooze the alarms on the active device.</p>
+<p>The following image shows xDrip+ app Battery Alert under <strong>Extra Alerts (xDrip+)</strong> and example alerts on both devices.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<h4 id="xdrip-watchface-settings">XDrip Watchface Settings</h4>
+<p>The following new preferences are supported:<br />
+  - Refresh On Change - Refresh face on each data change.  When disabled, face is refreshed only each minute, potentially saving battery usage.<br />
+  - Show Treatments - Show Treatment points on graph.  When disabled, treatments will not be displayed, potentially saving battery usage.<br />
+  - 24 HR Format - Format time using 24 Hour Format.  When enabled, uses less face real estate, potentially useful for circular faces.<br />
+  - Show Date - Show Date on face.<br />
+  - Override Locale - Override watch with phone locale, used to format date.<br />
+  - Show Toasts - Show Steps and Extra Status toast popup messages.<br />
+  - Show Steps - Show Step Counter on all XDrip watchfaces.  Steps reset to 0 at midnight. To enable xDrip+ synchronization, you must switch <strong>Use Wear Health Data</strong> on under xDrip+ <strong>Smart Watch Features</strong>. When enabled, wear steps will be synced to xDrip+.<br />
+  - Step Delay - Select time delay from the list preferences.  Step Delay is maximum reporting latency. Events are batched up until this "maximum" latency has lapsed. Once lapsed all batched up events will occur sequentially.<br />
+  This is a way to save power consumption so that each event does not interrupt the processer. If you find 10 seconds uses too much power you can select a larger latency. This will of course effect the frequency at which the display of the steps is updated on the watch. Defaults to 10 seconds.  To conserve wear battery, select 5 minutes.<br />
+  - Heart Rate - Show last BPM is supported by device.<br />
+  - Show Status - Show Loop Status on the XDrip, XDrip(Large) and XDrip (BigChart)watchfaces.  This will display the HAPP status message containing Basal%, IOB, COB.<br />
+  - Opaque Card - Show notifications cards with opaque background.  This will allow cards to be read more easily in ambient mode.<br />
+  - Small Font - Fontsize of small text in status and delta time fields on the XDrip and XDrip(Large) watchfaces.<br />
+  - Show Bridge Battery - Show bridge battery usage on the XDrip and XDrip(Large) watchfaces.  This setting will only be displayed when the BT Collector uses a battery, for example, LimiTTer or Wixel/xBridge.</p>
+<p>The following images show some of the watchface preferences under XDrip Watchface Settings.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<p>The following images show an example of an alert displayed with Opaque Card enabled and disabled in Ambient Mode and Interactive Mode.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<p>The following images show required xDrip+ preferences and examples of Watch Steps synced with xDrip+.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<h4 id="use-android-wear-complication-since-wear-20">Use Android Wear complication since Wear 2.0</h4>
+<p>You can also install Watchfaces supporting <code>complication</code>, for example:</p>
+<p>https://play.google.com/store/apps/details?id=co.smartwatchface.watch.face.aviator.android.wear&amp;hl=en_US</p>
+<p>How-to use:<br />
+* long press on watchface<br />
+* open settings<br />
+* complication<br />
+* 3rd party<br />
+* select where to place complication<br />
+* select xdrip pref</p>
+<p>If placing right or left, it looks like this:</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<ul>
+<li>If under xdrip settings you have selected <code>Loop status</code> and placing up or bottom, it looks like this:</li>
+</ul>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<p>If getting "Null, Null" displayed, try to add a blood calibration (see https://github.com/NightscoutFoundation/xDrip/issues/651)</p>
+<h4 id="watchface-tap-feature">Watchface Tap Feature</h4>
+<p>Watchface tap feature is now implemented for the following preferences:<br />
+* Chart Timeframe - double tap on the chart in any of the watchfaces will toggle the chart timeframe allowing one to zoom in/out of a frame.<br />
+* Small Font - double tap on the delta time in the XDrip or XDrip(Large) watchface will toggle the fontsize of the delta and status line text for ease of viewing.<br />
+* Status Line - single tap on the status line in the XDrip or XDrip(Large) watchface will popup a toast message containing the full text for ease of viewing.</p>
+<p>The following images show an example of the HAPP message and its integration with xDrip+ watchface.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<h4 id="battery-usage">Battery Usage</h4>
+<p>The wear app supports the display of two battery usage options:<br />
+* Bridge - displays the wixel or LimiTTer battery usage.  The Show Bridge Battery must be enabled to display the bridge battery usage.<br />
+* Uploader or Wear - will display the battery usage of the device running the collection service.  So, if Enable Wear and Force Wear prefs are enabled, it will display the <strong>watch</strong> battery usage.  If only Enable Wear is enabled, then it will display the battery usage of whichever device is actually running the collection service.  If neither prefs are enabled, it displays the phone's battery usage.  The label, <strong>Uploader</strong> or <strong>Wear</strong> corresponds to the device running the collector.  <strong>Uploader</strong> for phone which is the default, and <strong>Wear</strong> for the watch.  This will allow users to identify which device is running the collection service.</p>
+<p>The following images show an example of BT Collector running under each device, with and without Show Status enabled, and Chart Timeframe toggled.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<p>For G4 and G5 BT Collectors, when BT Collector is running on the Phone, the battery usage displays the phone's battery usage as indicated by its label, "Uploader".<br />
+When BT Collector is running on the watch, battery usage shows the watches' battery usage as indicated by its label, "Wear".<br />
+When the BT Collector is connected to a bridge device, the battery usage displays that device's battery usage as indicated by its label, "Bridge".</p>
+<h2 id="3-dot-menu">3-Dot Menu</h2>
+<p>The 3-dot Menu icon is displayed in the upper, left corner on the XDrip watchface, below the Steps icon if enabled.  Tapping it will activate a new activity with two rows of 4 icons, each with a separate task as shown in the following screenshot.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<p>The second row of icons in the Menu allow the user to view data tables as shown in the following examples.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<h2 id="xdrip-treatments">XDrip Treatments</h2>
+<p>Treatment data points can be displayed on the watchface graph by enabling the "Show Treatments" preference, either on the Phone under Wear Integration, or via the watch XDrip Prefs activity as shown in the following screenshot.</p>
+<p>Once enabled, treatments entered via the phone or watch UI will be displayed on the watch.  Insulin, Carbs, Notes are displayed with a green diamond.  Bloodtests are displayed with a red square, and Calibrations are displayed with a red circle.  Each of these are outlined with a yellow rim for a 3-dimensional effect.  Treatments entered on the watch will be saved to the Wear database and posted to the phone upon next connection.  Likewise, treatments entered on the phone will be posted to the watch upon next connection so that data should remain in-sync when Show Treatments is enabled.</p>
+<p>Note, this process only supports treatments entered by the Keyboard Input Activity.  Spoken Treatment is currently not supported since many watches do not support speech recognition well.  Treatments entered via the Spoken Treatment Activity continues to work as before and requires a connection to the phone for data to be processed.<br />
+Here is the typical setup and process on the watch for Spoken Treatments.</p>
+<pre><code>1. Associate the Spoken Treatment app with "Take a note" Action in your phone's Android Wear for the watch. Your phone may also have the option to select Google Keep as well.
+2. Say "Ok Google" to your watch.  It is slow so you have to speak clearly. Then say, "Take a note". The watch should display the speak icon.
+3. Then speak your treatment, slowly and distinctly, for example, "1 carb".  This activates the Spoken Treatment activity with the mic icon. Press the mic icon, and the approval screen should be displayed.
+</code></pre>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<p>The following screenshot shows an example of entering Treatments on the watch.</p>
+<p><span class="imgnote">[screenshot omitted — see source]</span></p>
+<h2 id="troubleshooting-xdrip-wear">Troubleshooting xDrip Wear</h2>
+<p>The BT Collector connects to the transmitter every 5 mins by design. This is how the Collector's BLE works. The following provides some troubleshooting suggestions if readings are not being receiving every 5 minutes.</p>
+<h3 id="confirm-collector-runs-on-the-phone-with-wear-integration">Confirm Collector runs on the Phone with Wear Integration</h3>
+<p>Ensure Wear Integration preferences are set as follows:<br />
+  - <strong>Wear Integration</strong> is enabled.<br />
+  - <strong>Enable Wear</strong> is selected.<br />
+  - <strong>Force Wear</strong> is <strong>NOT</strong> selected.</p>
+<p>This will allow your phone to use the G5 collector as normal when both phone and watch are in-range. After receiving a reading on your phone, ensure it displays on your watch.</p>
+<p>After you confirm that you are get a reading on your phone, enable <strong>Force Wear</strong>, either on the phone or watch XDrip Prefs.</p>
+<p>This will force the watch to use its BT collector, and force the phone to stop its BT collector service discussed next.</p>
+<h3 id="confirm-collector-runs-on-the-watch-with-wear-integration">Confirm Collector runs on the Watch with Wear Integration</h3>
+<p>Ensure Wear Integration preferences are set as follows on both phone and watch:<br />
+  - <strong>Wear Integration</strong> is enabled.<br />
+  - <strong>Enable Wear</strong> is selected.<br />
+  - <strong>Force Wear</strong> is selected.<br />
+  - <strong>Device running Collection Service</strong> corresponds to the watch display name + uuid.<br />
+  - XDrip Prefs <strong>BT Collector</strong> corresponds to phone's Hardware Data Source.</p>
+<p>Confirm Environment:<br />
+  - Disable engineering mode.<br />
+  - Disable Calibration plugin (incl. Adrian calibration mode).<br />
+  - Disable then re-enable Wear Integration.<br />
+  - Enable Force Wear.<br />
+  - Show raw values.<br />
+  - Smooth sensor noise off.<br />
+  - Reset Wear DB, restart Watch, restart phone.<br />
+  - Confirm phone and watch are connected via Android Wear.<br />
+  - Change Watchface to big chart and then back to standard xDrip.<br />
+  - Optionally, perform <strong>Reset Wear DB</strong> from xDrip+ upper, right menu.  Refer to <a href="#syncing-bgs-and-wear-database">Syncing BGs and Wear Database</a> above.</p>
+<h3 id="confirm-the-following-in-android-wear-app-on-phone">Confirm the following in Android Wear app on phone</h3>
+<ul>
+<li>Watch is connected to the phone.</li>
+<li>Watch Settings <strong>always-on screen</strong> is enabled.  This will prevent watch doze mode from shutting down the BT Collector.<br />
+Refer to <a href="#xdrip-bt-settings">XDrip BT Settings</a> above for additional details.</li>
+</ul>
+<p>To verify devices are connected, check the phone Android Wear app.  Android wear (on the watch) displays the <strong>cloud</strong> icon if the devices are not in-range, or if the user manually disconnects the devices in Android Wear.</p>
+<p>Similarly, some users have found it necessary to enable the <strong>Stay awake while charging</strong> setting under their watch Settings <strong>Developer Options</strong>.  In testing thus far, only the <strong>Moto 360 2nd Gen</strong> watch has required this option.</p>
+<h3 id="confirm-wear-integration-preferences-are-consistent-on-both-phone-and-watch">Confirm Wear Integration preferences are consistent on both phone and watch</h3>
+<p><strong>Enable Wear</strong> and  <strong>Force Wear</strong> should have same settings on phone and watch.  If not, reset them accordingly.  The xDrip+ should sync these values whenever the user modifies them or at application startup, but both phone and watch must be connected and in-range for syncing to be performed.</p>
+<h3 id="confirm-collection-method-is-consistent-on-both-phone-and-watch">Confirm Collection Method is consistent on both phone and watch</h3>
+<p>Confirm the phone's Hardware Data Source preference matches the watch's BT Collector preference.  The watch's BT Collector preference is a read-only preference.  It gets set based on the phone's Hardware Data Source preference. The following values correspond to the collectors:<br />
+   - BluetoothWixel("BluetoothWixel"),<br />
+   - DexcomShare("DexcomShare"),<br />
+   - DexbridgeWixel("DexbridgeWixel"),<br />
+   - LimiTTer("LimiTTer"),<br />
+   - WifiWixel("WifiWixel"),<br />
+   - DexcomG5("DexcomG5"),<br />
+   - WifiDexBridgeWixel("WifiDexbridgeWixel"),<br />
+   - LibreAlarm("LibreAlarm")</p>
+<p>Refer to <a href="#collector">Collector</a> above for additional details.</p>
+<h3 id="confirm-collector-device-exists-under-watch-settings-bt-devices">Confirm Collector device exists under Watch Settings BT Devices</h3>
+<p>Once the BT Collection Service executes it will perform a BT scan, and upon detecting the BT Collector device, will display under the Watch Settings -&gt; Bluetooth Devices.  Typically it will show as disconnected as it only connects briefly to receive the BG reading.</p>
+<h3 id="confirm-calibration-preferences-are-consistent-on-both-phone-and-watch">Confirm Calibration Preferences are consistent on both phone and watch</h3>
+<p>The watch app does not yet support Calibration Plugins.  Therefore, to confirm BG readings are consistently calculated on both phone and watch, it is best to turn off Calibration Plugins on the phone.<br />
+  - LCS - <strong>Advanced Calibration</strong> - all should be off, including <strong>Adrian calibration mode</strong>.</p>
+<h3 id="confirm-noise-preferences-are-consistent-on-both-phone-and-watch">Confirm Noise Preferences are consistent on both phone and watch</h3>
+<p>The watch app does not yet support Noise smoothing.  Therefore, to confirm BG readings are consistently calculated on both phone and watch, it is best to turn off Noise Smoothing on the phone.</p>
+<ul>
+<li>
+<p>xDrip+ Display Settings - <strong>Show Noise workings</strong> should be disabled.</p>
+<p>When Show Noise Workings is enabled, <strong>BG Original</strong> and <strong>BG Estimate</strong> will display on the home screen.<br />
+- BG Original should correspond to your watch value, and<br />
+- BG Estimate should correspond to your phone value.</p>
+</li>
+<li>
+<p>xDrip+ Display Settings - <strong>Smooth Sensor Noise</strong> should be disabled.</p>
+</li>
+</ul>
+<h3 id="confirm-location-permission-is-enabled-in-watch-settings">Confirm Location Permission is enabled in Watch Settings</h3>
+<p>Android Wear requires Location Access to be manually accepted by the user.</p>
+<p>However, sometimes the user overlooks this dialog.</p>
+<p>Further, this preference may appear to be enabled under the Watch -&gt; Settings -&gt; Permissions - XDrip Prefs, when it actually is DISABLED, perhaps an Android Wear bug.<br />
+  Evidence of this can be seen in the Events log (refer to <a href="#syncing-bgs-and-wear-database">Syncing BGs and Wear Database</a> UserError Table) with the following log entry:<br />
+<code>E/jamorham JoH: Could not set pairing confirmation due to exception: java.lang.SecurityException: Need BLUETOOTH PRIVILEGED permission: Neither user 10035 nor current process has android.permission.BLUETOOTH_PRIVILEGED.</code><br />
+  This message appears to occur only once, so it is easily missed if logging is not enabled via the Sync Wear Logs preference.</p>
+<p>However, this Permission is required, and therefore, if not enabled, the Collection Service will not be able to connect to the transmitter via BLE.<br />
+  Connection errors such as the following (for G5CollectionService, DexcomG5 Hardware Service) will continued to be logged to the Events log:</p>
+<p>```<br />
+  06-10 07:47:03.427 2162-2172/? E/G5CollectionService: Encountered 133: true</p>
+<p>06-10 07:57:14.936 2162-2173/? I/G5CollectionService: Read code: 7 - Transmitter NOT already authenticated?<br />
+  06-10 07:57:14.937 2162-2173/? E/G5CollectionService: Sending new AuthRequestTxMessage to Authentication ...<br />
+  06-10 07:57:14.958 2162-2173/? D/G5CollectionService: New AuthRequestTxMessage: 01346163356234373302<br />
+  06-10 07:57:14.959 2162-2173/? I/G5CollectionService: AuthRequestTX: 01346163356234373302<br />
+  06-10 07:57:14.961 2162-2173/? E/G5CollectionService: OnCharacteristic READ finished: status: Gatt Success<br />
+  06-10 07:57:14.984 2162-2173/? E/G5CollectionService: STATE_DISCONNECTED: Connection terminated by peer<br />
+  ```</p>
+<p>Causing the Collector to restart Bluetooth:<br />
+<code>06-10 07:57:15.183 2162-2751/? E/G5CollectionService: Cycling BT-gatt - disabling BT
+  ...
+  06-10 07:57:18.204 2162-2752/? E/G5CollectionService: Cycling BT-gatt - enabling BT</code></p>
+<p>The following steps are recommended for resolution:<br />
+  1. Toggle the <code>Location ENABLED preference</code> to disable it under Watch Settings (refer to <a href="#initial-wear-enablement-requests-location-permission">Initial Wear Enablement Requests Location Permission</a>).<br />
+  2. Restart the Collector on Wear (refer to <a href="#3-dot-menu">3-Dot Menu</a> Restart Collector or alternatively, Restart Collector in xDrip+ System Status).  This should force the Location Access Permission dialog to be displayed on the watch for user acceptance.<br />
+  3. Or, if the above fail to resolve the issue, uninstall then reinstall the Wear app.  This will force the Location Access Permission dialog to be displayed on the watch for user acceptance.</p>
+<h1 id="adb-debug">ADB DEBUG</h1>
+<h3 id="debugging-android-wear">Debugging Android Wear</h3>
+<p><a href="http://www.androidpolice.com/2014/07/05/how-to-android-wear-enable-debugging-take-screenshots-unlock-the-bootloader-and-root-the-lg-g-watch/">Howto Enable Debugging</a></p>
+<ol>
+<li>Open Settings.<ol>
+<li>Tap on Wear's watch face. This will take you to the voice prompt. Be sure to hit the watch face instead of a notification card.</li>
+<li>Wear will wait up to 3 seconds for you to say something, then it'll change to a scrollable list of native actions. You can speed this up by swiping up or tapping on the voice prompt.</li>
+<li>Scroll down and select Settings.</li>
+</ol>
+</li>
+<li>Open About.</li>
+<li>Find Build number and tap on it 7 times. You're done when a toast popup appears with the message, "You are now a developer!"</li>
+<li>Swipe right (to go back) to the Settings menu.</li>
+<li>Open Developer options.</li>
+<li>Find and set ADB debugging to Enabled.</li>
+<li>You'll be asked if you're sure you want to enable. Tap the checkmark button to confirm.</li>
+<li>[Optional] If you want to also turn on debugging over Bluetooth, Find and set Debug over Bluetooth to Enabled.</li>
+</ol>
+<p>At the terminal, issue:</p>
+<pre><code>D:\Android\sdk\platform-tools&gt;adb devices
+List of devices attached
+14502D1AF252D74 device
+D:\Android\sdk\platform-tools&gt;adb -s 14502D1AF252D74 logcat &gt; wear.log
+</code></pre>
+<p>If you see <strong>unauthorized</strong> description of your device, ensure that ADB debugging is enabled on your watch under Developer Options.</p>
+<p>Enter the following cmd to generate a logcat log, where -s arg is your watch device if you have more than one device connected to your computer, otherwise, omit the -s arg. You can retrieve the device id using cmd adb devices: </p>
+<pre><code>D:\Android\sdk\platform-tools&gt;adb devices
+D:\Android\sdk\platform-tools&gt;adb -s 14502D1AF252D74 logcat &gt; wear.log
+</code></pre>
+<h3 id="help-my-nfc-patched-sony-smartwatch-3-doesnt-work-with-xdrip-as-a-collector">Help my NFC patched Sony SmartWatch 3 doesn't work with xDrip as a collector</h3>
+<p>The problem typically is the version of Google Play Services on the watch. You need at least 9.x installed.</p>
+<p>On the watch check the version with <code>Settings</code> -&gt; <code>About</code> -&gt; <code>Versions</code></p>
+<p>If your google play services version is less than 9, then you should install version 9.</p>
+<p>This is available from unofficial sources which you can find by googling, for example:</p>
+<p>https://www.apkmirror.com/apk/google-inc/google-play-services-android-wear/google-play-services-android-wear-9-8-41-release/google-play-services-9-8-41-534-130237018-android-apk-download/</p>
+<p>To install, connect your watch via usb and make sure adb debugging is enabled. You should be familiar with this process from how you originally installed the custom NFC firmware.</p>
+<p>use the command:</p>
+<p><code>adb install -r downloaded-filename.apk</code></p></section>
+</div><script>
+function F(q){q=(q||'').trim().toLowerCase();var s=document.querySelectorAll('section');var t=document.getElementById('toc');
+if(!q){s.forEach(function(e){e.classList.remove('hidden')});t.classList.remove('hidden');return}
+t.classList.add('hidden');
+s.forEach(function(e){e.classList.toggle('hidden', e.textContent.toLowerCase().indexOf(q)===-1)});}
+</script></body></html>

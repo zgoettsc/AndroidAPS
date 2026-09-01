@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trio Settings Reference</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.5 -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+         color: #1a1a1a; background: #f6f7f9; padding: 16px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 22px 0 8px; padding-bottom: 4px; border-bottom: 2px solid #d0d5dd; }
+  .meta { color: #555; font-size: 13px; margin-bottom: 10px; }
+  .warn { background: #fff4e5; border: 1px solid #f0b37e; border-radius: 8px;
+          padding: 10px 12px; font-size: 13px; margin: 12px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 4px 0 8px; background: #fff;
+          border-radius: 8px; overflow: hidden; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid #eceef1; font-size: 14px; }
+  th { background: #eef1f5; font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .two { grid-template-columns: 1fr; } }
+  .k { color: #444; } .v { font-weight: 600; text-align: right; }
+  .card { background:#fff; border-radius:8px; padding: 2px 12px; }
+  .card div { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #f0f1f3; }
+  .card div:last-child { border-bottom:none; }
+  footer { color:#777; font-size:12px; margin-top:24px; }
+  @media print { body { background:#fff; } .warn { border-color:#999; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Trio Settings Reference</h1>
+  <div class="meta">Source: Trio export <strong>2026-08-31</strong> · Trio v0.8.3 · Units: <strong>mg/dL</strong></div>
+
+  <div class="warn">
+    <strong>Reference only.</strong> These are a snapshot of Trio settings for viewing offline while you tune AAPS yourself.
+    Not a dosing instruction and does not override clinical judgment. Re-export and update this card whenever you change settings.
+  </div>
+
+  <h2>Devices &amp; insulin</h2>
+  <div class="card">
+    <div><span class="k">Pump</span><span class="v">Omnipod DASH</span></div>
+    <div><span class="k">CGM</span><span class="v">Dexcom G7 (plugin)</span></div>
+    <div><span class="k">Insulin</span><span class="v">Novolog (insulin aspart)</span></div>
+    <div><span class="k">Smooth glucose value</span><span class="v">Disabled</span></div>
+  </div>
+
+  <h2>Basal rates &nbsp;<span style="font-weight:400;color:#666;font-size:13px">(total ≈ 24.7 U/day)</span></h2>
+  <table>
+    <tr><th>Time</th><th>U/hr</th></tr>
+    <tr><td>12:00 AM (00:00)</td><td>1.0</td></tr>
+    <tr><td>5:00 AM (05:00)</td><td>0.85</td></tr>
+    <tr><td>6:00 AM (06:00)</td><td>1.5</td></tr>
+    <tr><td>8:00 AM (08:00)</td><td>0.7</td></tr>
+    <tr><td>6:30 PM (18:30)</td><td>1.55</td></tr>
+  </table>
+
+  <div class="two">
+    <div>
+      <h2>Insulin sensitivity (ISF)</h2>
+      <table>
+        <tr><th>Time</th><th>mg/dL / U</th></tr>
+        <tr><td>12:00 AM</td><td>60</td></tr>
+        <tr><td>5:00 AM</td><td>75</td></tr>
+        <tr><td>5:00 PM</td><td>52</td></tr>
+      </table>
+    </div>
+    <div>
+      <h2>Carb ratio &amp; target</h2>
+      <table>
+        <tr><th>Setting</th><th>Value</th></tr>
+        <tr><td>Carb ratio (all day)</td><td>11 g/U</td></tr>
+        <tr><td>Target glucose</td><td>95 mg/dL</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h2>Insulin action</h2>
+  <div class="card">
+    <div><span class="k">Duration of insulin action (DIA)</span><span class="v">9 h</span></div>
+    <div><span class="k">Custom peak time</span><span class="v">75 min (→ AAPS "Rapid-Acting – Oref")</span></div>
+  </div>
+
+  <h2>Safety limits</h2>
+  <div class="card">
+    <div><span class="k">Max IOB</span><span class="v">10 U</span></div>
+    <div><span class="k">Max bolus</span><span class="v">8 U</span></div>
+    <div><span class="k">Max basal rate</span><span class="v">3 U/hr</span></div>
+    <div><span class="k">Max COB</span><span class="v">150 g</span></div>
+    <div><span class="k">Min safety threshold</span><span class="v">70 mg/dL</span></div>
+    <div><span class="k">Max daily safety multiplier</span><span class="v">300 %</span></div>
+    <div><span class="k">Current basal safety multiplier</span><span class="v">400 %</span></div>
+  </div>
+
+  <h2>Autosens</h2>
+  <div class="card">
+    <div><span class="k">Autosens max</span><span class="v">120 %</span></div>
+    <div><span class="k">Autosens min</span><span class="v">70 %</span></div>
+    <div><span class="k">Rewind resets autosens</span><span class="v">Enabled</span></div>
+  </div>
+
+  <h2>SMB / UAM</h2>
+  <div class="card">
+    <div><span class="k">Enable SMB always</span><span class="v">Enabled</span></div>
+    <div><span class="k">SMB with COB</span><span class="v">Enabled</span></div>
+    <div><span class="k">SMB after carbs</span><span class="v">Enabled</span></div>
+    <div><span class="k">SMB with temp target</span><span class="v">Disabled</span></div>
+    <div><span class="k">SMB with high glucose</span><span class="v">Disabled</span></div>
+    <div><span class="k">Allow SMB with high temp target</span><span class="v">Disabled</span></div>
+    <div><span class="k">Enable UAM</span><span class="v">Enabled</span></div>
+    <div><span class="k">Max SMB basal minutes</span><span class="v">45</span></div>
+    <div><span class="k">Max UAM basal minutes</span><span class="v">45</span></div>
+    <div><span class="k">Max glucose rise for SMB</span><span class="v">25 %</span></div>
+    <div><span class="k">SMB delivery ratio</span><span class="v">50 %</span></div>
+    <div><span class="k">SMB interval</span><span class="v">3 min</span></div>
+  </div>
+
+  <h2>Dynamic / target behavior</h2>
+  <div class="card">
+    <div><span class="k">Dynamic ISF</span><span class="v">Disabled</span></div>
+    <div><span class="k">Weighted average of TDD</span><span class="v">35 %</span></div>
+    <div><span class="k">Adjust basal</span><span class="v">Disabled</span></div>
+    <div><span class="k">High temp target raises sensitivity</span><span class="v">Disabled</span></div>
+    <div><span class="k">Low temp target lowers sensitivity</span><span class="v">Disabled</span></div>
+    <div><span class="k">Sensitivity raises target</span><span class="v">Disabled</span></div>
+    <div><span class="k">Resistance lowers target</span><span class="v">Disabled</span></div>
+    <div><span class="k">Half-basal exercise target</span><span class="v">160 mg/dL</span></div>
+  </div>
+
+  <h2>Other algorithm settings</h2>
+  <div class="card">
+    <div><span class="k">Min 5-min carb impact</span><span class="v">8 mg/dL</span></div>
+    <div><span class="k">Remaining carbs percentage</span><span class="v">100 %</span></div>
+    <div><span class="k">Remaining carbs cap</span><span class="v">90 g</span></div>
+    <div><span class="k">Noisy CGM target increase</span><span class="v">130 %</span></div>
+    <div><span class="k">Skip neutral temps</span><span class="v">Disabled</span></div>
+    <div><span class="k">Unsuspend if no temp</span><span class="v">Disabled</span></div>
+    <div><span class="k">Suspend zeros IOB</span><span class="v">Enabled</span></div>
+  </div>
+
+  <h2>Override presets (temp targets)</h2>
+  <table>
+    <tr><th>Preset</th><th>Basal</th><th>Target</th><th>SMB</th><th>Affects</th></tr>
+    <tr><td>Running</td><td>75 %</td><td>160</td><td>Disabled</td><td>ISF &amp; CR</td></tr>
+    <tr><td>Work</td><td>80 %</td><td>120</td><td>—</td><td>ISF &amp; CR</td></tr>
+    <tr><td>Super low insulin</td><td>50 %</td><td>140</td><td>Disabled</td><td>ISF &amp; CR</td></tr>
+  </table>
+
+  <footer>
+    Generated from Trio export TrioSettings_20260831. Keep a copy on each phone (Downloads or the AAPS folder)
+    and a printed copy in the kit. Update whenever your therapy changes.
+  </footer>
+
+</div>
+</body>
+</html>
