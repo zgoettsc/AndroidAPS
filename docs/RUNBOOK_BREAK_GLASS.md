@@ -48,9 +48,29 @@ would become the accuracy-preferred primary and xDrip+ the backup; until then xD
 5. Confirm a BG value appears on the AAPS home screen within 5–10 minutes.
 6. Loop continues automatically once BG flows.
 
-To return to BYODA later: Config Builder → BG Source → BYODA.
-
 **Tested on:** ___________ (date) — retest at every battery top-up that falls on a sensor change.
+
+## A2. xDrip+ misbehaving on a sensor → switch reader to Juggluco
+
+Juggluco (installed on all three phones, self-signed APK from github.com/j-kaltes/Juggluco,
+archived in the kit) is a second, independent G7 reader. It broadcasts to AAPS on the **same
+xDrip channel**, so AAPS needs no reconfiguring beyond having BG Source = xDrip+.
+
+**Critical: only ONE reader active at a time.** xDrip+ and Juggluco both push through the identical
+xDrip broadcast into AAPS — running both at once gives erratic BG. Before enabling Juggluco, stop
+xDrip+ broadcasting (xDrip+ → Settings → Inter-app settings → Broadcast locally: OFF) or don't let
+xDrip+ hold the sensor.
+
+1. In **Juggluco** → left menu (hamburger) → **Settings** → enable **xDrip broadcast**
+   (NOT "Patched Libre"). When prompted for the receiving app, enter **`info.nightscout.androidaps`**
+   and save/confirm.
+2. Juggluco → left menu → **Photo** → scan the data-matrix on the **G7 applicator** to start/read
+   the sensor.
+3. In **AAPS** → Config Builder → **BG Source → xDrip+** (Juggluco rides this same channel).
+4. Confirm a BG value appears on the AAPS home screen within ~5–10 min.
+
+To go back to xDrip+ as the reader: turn Juggluco's broadcast off, re-enable xDrip+ Broadcast
+locally, and let xDrip+ own the sensor.
 
 ## B. DASH pods exhausted → Omnipod Eros
 
